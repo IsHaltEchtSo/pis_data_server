@@ -3,3 +3,6 @@ Core_Semester_1/
 
 # macOS specific files
 .DS_Store
+
+# Python specific files
+venv/
