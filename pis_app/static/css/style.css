@@ -1,0 +1,27 @@
+body {
+  background-color: rgb(226, 69, 69);
+}
+
+nav {
+  padding-left: 35px;
+  margin-bottom: -10px;
+}
+
+nav > a {
+  color: white;
+  font-size: 35px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+div.main-container {
+  height: 690px;
+  border-radius: 10px;
+  background-color: white;
+  
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  
+  padding: 30px;
+}
