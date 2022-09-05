@@ -7,6 +7,12 @@ nav {
   margin-bottom: -10px;
 }
 
+nav > span {
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+}
+
 nav > a {
   color: white;
   font-size: 35px;
