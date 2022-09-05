@@ -6,6 +6,7 @@ Core_Semester_1/
 
 # Python specific files
 venv/
+__pycache__/
 
 # Flask specific files
 *config.py
