@@ -25,14 +25,14 @@ class AppInitializer:
 
     def init_views(self) -> None:
         """
-        Initialize the views using local imports to prevent circular imports.
+        Initialize the views using local imports after instantiating an app.
         This is called within the app context to avoid the app context error.
         """
-        pass
+        import pis_app.routes
     
     def init_app_in_ctx(self) -> None:
         """
-        Initialize the app in the app context.
+        Delegate to methods that need the app context to init the app.
         """
         self.init_views()
 
