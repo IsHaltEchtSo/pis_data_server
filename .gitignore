@@ -9,4 +9,4 @@ venv/
 __pycache__/
 
 # Flask specific files
-*config.py
+/pis_app/config.py
