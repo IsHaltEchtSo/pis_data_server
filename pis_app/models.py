@@ -1,1 +1,1 @@
-from database import Base
+from pis_app.database import Base

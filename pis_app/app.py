@@ -29,11 +29,21 @@ class AppInitializer:
         This is called within the app context to avoid the app context error.
         """
         import pis_app.routes
-    
+
+    def init_database(self) -> None:
+        """
+        Initialize the database and locally import the models in app context
+        """
+        from pis_app.database import Session
+        import pis_app.models
+
+        self.flask_app.Session = Session
+
     def init_app_in_ctx(self) -> None:
         """
         Delegate to methods that need the app context to init the app.
         """
+        self.init_database()
         self.init_views()
 
     def init_app(self) -> None:
