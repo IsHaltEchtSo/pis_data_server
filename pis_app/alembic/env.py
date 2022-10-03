@@ -5,6 +5,10 @@ from sqlalchemy import pool
 
 from alembic import context
 
+import sys
+
+sys.path = ['', '..'] + sys.path[1:]
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -15,7 +19,7 @@ fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from database import Base
+from pis_app.database import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
