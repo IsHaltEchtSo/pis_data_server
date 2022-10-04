@@ -56,9 +56,9 @@ class UpdatedColumn(Base):
     id = Column(Integer, primary_key=True)
     zettel_update_id = Column(Integer, ForeignKey('zettel_updates.id'))
     zettel_update = relationship('ZettelUpdate', back_populates='updated_columns')
-    column_name = Column(String)
-    old_column_value = Column(String)
-    new_column_value = Column(String)
+    column_name = Column(String, nullable=False)
+    old_column_value = Column(String, nullable=False)
+    new_column_value = Column(String, nullable=False)
 
     def __repr__(self) -> str:
         return f"<Updated Column {self.column_name} for Zettel Update {self.zettel_update_id}>"
