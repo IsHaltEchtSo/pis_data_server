@@ -1,10 +1,8 @@
-from pis_app.database import Base, Session
+from pis_app.database import Base
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, Boolean
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship
 
 
-#TODO: CUD operations also make a new Zettel Update
-#TODO: DB backups as csv for experimentation
 
 class User(Base):
     """A dummy model just yet"""
@@ -14,6 +12,7 @@ class User(Base):
 
     def __repr__(self) -> str:
         return f"<User {self.name}>"
+
 
 zettel_links_association = Table(
     'zettel_links_table', Base.metadata,
