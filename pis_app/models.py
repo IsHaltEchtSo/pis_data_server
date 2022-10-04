@@ -3,7 +3,6 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship, sessionmaker
 
 
-#TODO: add repr for classes
 #TODO: CUD operations also make a new Zettel Update
 #TODO: DB backups as csv for experimentation
 
@@ -13,6 +12,8 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(12))
 
+    def __repr__(self) -> str:
+        return f"<User {self.name}>"
 
 zettel_links_association = Table(
     'zettel_links_table', Base.metadata,
@@ -35,6 +36,9 @@ class Zettel(Base):
     )
     updates = relationship('ZettelUpdate', back_populates='zettels')
 
+    def __repr__(self) -> str:
+        return f"<Zettel {self.id}: {self.title}>"
+
 
 class ZettelUpdate(Base):
     __tablename__ = 'zettel_updates'
@@ -43,6 +47,9 @@ class ZettelUpdate(Base):
     zettels = relationship('Zettel', back_populates='updates')
     updated_columns = relationship('UpdatedColumn', back_populates='zettel_update')
     transferred_to_zettelkasten = Column(Boolean, default=False)
+
+    def __repr__(self) -> str:
+        return f"<Zettel Update {self.id} for Zettel {self.zettel_id}>"
 
 
 class UpdatedColumn(Base):
@@ -53,3 +60,6 @@ class UpdatedColumn(Base):
     column_name = Column(String)
     old_column_value = Column(String)
     new_column_value = Column(String)
+
+    def __repr__(self) -> str:
+        return f"<Updated Column {self.column_name} for Zettel Update {self.zettel_update_id}>"
