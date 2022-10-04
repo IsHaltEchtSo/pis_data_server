@@ -1,6 +1,7 @@
 """
 See 'rsc/Redirect_Backbone.png' for a diagram of the resource hierarchy.
 """
+#TODO: CUD operations make a new Zettel Update
 from flask import render_template, current_app as app
 
 
