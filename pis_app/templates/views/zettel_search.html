@@ -1,5 +1,8 @@
 {% extends 'components/base.html' %}
 
 {% block content %}
-  <a href="{{ url_for('zettel_search_results_view') }}">Zettel Search Results</a> <br>
+<a href="{{ url_for('zettel_view') }}">Zettel</a> <br>  # Just a dummy for now 
+  {% for zettel in results %}
+    <a href="{{ url_for('zettel_view') }}">Zettel</a> <br>
+  {% endfor %}
 {% endblock content %}

@@ -36,12 +36,6 @@ def zettel_search_view():
     return render_template('views/zettel_search.html', context={'title': 'Zettel Search'})
 
 
-# Route for 'Zettel Search Results' page
-@app.route('/zettel_search_results')
-def zettel_search_results_view():
-    return render_template('views/zettel_search_results.html', context={'title': 'Zettel Search Results'})
-
-
 # Route for 'Zettel' page
 @app.route('/zettel')
 def zettel_view():

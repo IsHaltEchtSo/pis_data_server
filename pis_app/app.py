@@ -1,13 +1,13 @@
 from flask import Flask
-from .config import DevelopmentConfig
+from .config import Config, DevelopmentConfig
 
 
 
-def create_app():
+def create_app(config_object: Config=DevelopmentConfig):
     app = Flask(__name__, )
 
     try:
-        app.config.from_object(DevelopmentConfig)
+        app.config.from_object(config_object)
 
         app_initializer = AppInitializer(app=app)
         app_initializer.init_app()
