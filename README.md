@@ -1,4 +1,5 @@
 # PIS - Personal Information System
+[![codecov](https://codecov.io/github/IsHaltEchtSo/pis_data_server/branch/main/graph/badge.svg?token=99zm6caCg0)](https://codecov.io/github/IsHaltEchtSo/pis_data_server)  
 *This product aims at improving the workflow for storing and displaying information to ultimately aid in building new frameworks*
 
 [**What**](#the-zettelkasten-method) |
