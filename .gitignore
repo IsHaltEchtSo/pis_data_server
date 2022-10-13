@@ -9,7 +9,7 @@ venv/
 __pycache__/
 
 # Flask specific files
-/pis_app/config.py
+*local_config.py
 
 # CI specific files
 *.coverage
