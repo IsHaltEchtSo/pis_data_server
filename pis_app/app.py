@@ -1,21 +1,27 @@
 from flask import Flask
-from .config import Config, DevelopmentConfig
 
 
 
-def create_app(config_object: Config=DevelopmentConfig):
+def create_app(config_object=None):
     app = Flask(__name__, )
 
-    try:
+    
+    # Load Dev Config if no config object is provided
+    if not config_object:
+        try:
+            from .local_config import DevelopmentConfig
+        except ModuleNotFoundError:
+            from .config import DevelopmentConfig
+            
+        app.config.from_object(DevelopmentConfig)
+    
+    else:
         app.config.from_object(config_object)
 
-        app_initializer = AppInitializer(app=app)
-        app_initializer.init_app()
+    app_initializer = AppInitializer(app=app)
+    app_initializer.init_app()
 
-        return app
-
-    except Exception as ex:
-        raise ex
+    return app
 
 
 class AppInitializer:
