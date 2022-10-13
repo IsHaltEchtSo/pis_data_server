@@ -80,9 +80,3 @@ class TestUpdatedColumn:
         assert updated_column.column_name == 'title'
         assert updated_column.old_column_value == 'Zettelkasten'
         assert updated_column.new_column_value == 'The Zettelkasten'
-
-
-# TODO: how to test a SQLA table object?
-class TestZettelLinksAssociation:
-    def test_something(self):
-        pass
