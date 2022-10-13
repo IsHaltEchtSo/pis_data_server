@@ -10,3 +10,6 @@ __pycache__/
 
 # Flask specific files
 /pis_app/config.py
+
+# CI specific files
+*.coverage
