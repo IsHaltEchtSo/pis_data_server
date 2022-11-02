@@ -13,3 +13,6 @@ __pycache__/
 
 # CI specific files
 *.coverage
+
+# Organization specific files
+__NEXT ACTIONS__.md
