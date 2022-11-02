@@ -9,10 +9,17 @@
 <body>
   {% include 'components/navbar.html' %}
 
+  <ul>
+    {% for message in get_flashed_messages() %}
+      <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+
   <div class="main-container">
     {% block content %}
 
     {% endblock content %}
   </div>
+  
 </body>
 </html>

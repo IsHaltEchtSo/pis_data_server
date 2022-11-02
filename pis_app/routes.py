@@ -3,6 +3,7 @@ See 'rsc/Redirect_Backbone.png' for a diagram of the resource hierarchy.
 """
 #TODO: CUD operations make a new Zettel Update
 from flask import render_template, current_app as app
+from flask_login import login_required, current_user
 
 
 # Route for 'Home' page
@@ -12,15 +13,11 @@ def index_view():
     return render_template('views/index.html', context={'title': 'Index'})
 
 
-# Route for 'Login' page
-@app.route('/login')
-def login_view():
-    return render_template('views/login.html', context={'title': 'Login'})
-
-
 # Route for 'History' page
 @app.route('/history')
+@login_required
 def history_view():
+    print(current_user)
     return render_template('views/history.html', context={'title': 'History'})
 
 
