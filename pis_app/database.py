@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, MetaData
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 from pis_app.config import DevelopmentConfig
 from pis_app.constants import NAMING_CONVENTION
 
