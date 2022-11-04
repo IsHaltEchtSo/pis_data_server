@@ -20,6 +20,11 @@ nav > a {
   text-decoration: none;
 }
 
+.right-bar {
+  font-size: 15px;
+  text-decoration: none;
+}
+
 div.main-container {
   height: 690px;
   border-radius: 10px;

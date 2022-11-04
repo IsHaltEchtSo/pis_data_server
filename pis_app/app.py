@@ -1,5 +1,8 @@
 from flask import Flask
+from flask_login import LoginManager
 
+
+login_manager = LoginManager()
 
 
 def create_app(config_object=None):
@@ -35,6 +38,7 @@ class AppInitializer:
         This is called within the app context to avoid the app context error.
         """
         import pis_app.routes
+        import pis_app.auth
 
     def init_database(self) -> None:
         """
@@ -52,9 +56,12 @@ class AppInitializer:
         self.init_database()
         self.init_views()
 
+
     def init_app(self) -> None:
         """
         Main method that delegates to other methods to fully initialize the app.
         """
+        login_manager.init_app(self.flask_app)
+
         with self.flask_app.app_context():
             self.init_app_in_ctx()
