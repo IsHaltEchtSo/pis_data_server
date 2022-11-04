@@ -4,7 +4,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from pis_app.database import Base
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
+import enum
 
+
+class RolesEnum(int, enum.Enum):
+    ADMIN = 0
+    USER = 1
 
 
 class User(UserMixin, Base):
@@ -13,6 +18,7 @@ class User(UserMixin, Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(12), nullable=False, unique=False)
     email = Column(String(40), unique=True, nullable=False)
+    role = Column(Integer, default=RolesEnum.USER.value)
     password = Column(String(200), primary_key=False, unique=False, nullable=False)
     created_on = Column(DateTime, index=False, unique=False, nullable=True)
     last_login = Column(DateTime, index=False, unique=False, nullable=True)
@@ -22,6 +28,7 @@ class User(UserMixin, Base):
         self.email = email
         self.created_on = dt.datetime.now()
         self.last_login = dt.datetime.now()
+        self.role = RolesEnum.USER.value
 
     def set_password(self, password):
         """Create hashed password."""

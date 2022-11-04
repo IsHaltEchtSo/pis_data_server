@@ -2,22 +2,22 @@
 See 'rsc/Redirect_Backbone.png' for a diagram of the resource hierarchy.
 """
 #TODO: CUD operations make a new Zettel Update
-from flask import render_template, current_app as app
+from flask import render_template, current_app as app, redirect, flash, url_for
 from flask_login import login_required, current_user
+from .models import RolesEnum, User
 
 
 # Route for 'Home' page
 @app.route('/')
 @app.route('/index')
 def index_view():
-    return render_template('views/index.html', context={'title': 'Index'})
+    return render_template('views/index.html', context={'title': 'Index', 'RolesEnum': RolesEnum})
 
 
 # Route for 'History' page
 @app.route('/history')
 @login_required
 def history_view():
-    print(current_user)
     return render_template('views/history.html', context={'title': 'History'})
 
 
@@ -67,3 +67,15 @@ def label_zettel_view():
 @app.route('/success')
 def success_view():
     return render_template('views/success.html', context={'title': 'Success'})
+
+
+# Route for 'Admin' page
+@app.route('/admin')
+@login_required
+def admin_view():
+    if current_user.role == RolesEnum.ADMIN.value:
+        session = app.Session()
+        users = session.query(User).all()
+        return render_template('views/admin.html', context={'title':'Admin Area', 'RolesEnum': RolesEnum, 'users':users})
+    flash('You are not an admin!')
+    return redirect(url_for('index_view'))
