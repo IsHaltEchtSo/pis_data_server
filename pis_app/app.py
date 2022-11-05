@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_caching import Cache
 
 
 login_manager = LoginManager()
-
+cache = Cache(config={'CACHE_TYPE': 'SimpleCache', "CACHE_DEFAULT_TIMEOUT": 300})
 
 def create_app(config_object=None):
     app = Flask(__name__, )
@@ -62,6 +63,7 @@ class AppInitializer:
         Main method that delegates to other methods to fully initialize the app.
         """
         login_manager.init_app(self.flask_app)
+        cache.init_app(self.flask_app)
 
         with self.flask_app.app_context():
             self.init_app_in_ctx()

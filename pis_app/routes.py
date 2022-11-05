@@ -5,6 +5,8 @@ See 'rsc/Redirect_Backbone.png' for a diagram of the resource hierarchy.
 from flask import render_template, current_app as app, redirect, flash, url_for
 from flask_login import login_required, current_user
 from .models import RolesEnum, User
+from .app import cache
+import time
 
 
 # Route for 'Home' page
@@ -79,3 +81,10 @@ def admin_view():
         return render_template('views/admin.html', context={'title':'Admin Area', 'RolesEnum': RolesEnum, 'users':users})
     flash('You are not an admin!')
     return redirect(url_for('index_view'))
+
+
+@app.route('/bottleneck')
+@cache.cached()
+def bottleneck_view():
+    time.sleep(10)
+    return render_template('views/bottleneck.html', context={'title':'Bottleneck Area'})
