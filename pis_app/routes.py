@@ -84,7 +84,10 @@ def admin_view():
 
 
 @app.route('/bottleneck')
-@cache.cached()
+# @cache.cached()  # caches the WHOLE view
 def bottleneck_view():
-    time.sleep(10)
-    return render_template('views/bottleneck.html', context={'title':'Bottleneck Area'})
+    title = cache.get('title')
+    if title is None:
+        time.sleep(10)
+        cache.set('title', 'Bottleneck Area')
+    return render_template('views/bottleneck.html', context={'title':title})
