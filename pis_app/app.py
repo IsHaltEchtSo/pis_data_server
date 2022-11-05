@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_caching import Cache
+from .config import loggerConfig
 
 
 login_manager = LoginManager()

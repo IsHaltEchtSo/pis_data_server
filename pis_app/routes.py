@@ -1,5 +1,5 @@
 """
-See 'rsc/Redirect_Backbone.png' for a diagram of the resource hierarchy.
+See 'rsc/Redirect_Backbone.png' for a diagram of the endpoints.
 """
 #TODO: CUD operations make a new Zettel Update
 from flask import render_template, current_app as app, redirect, flash, url_for
@@ -7,6 +7,7 @@ from flask_login import login_required, current_user
 from .models import RolesEnum, User
 from .app import cache
 import time
+import datetime as dt
 
 
 # Route for 'Home' page
@@ -86,8 +87,10 @@ def admin_view():
 @app.route('/bottleneck')
 # @cache.cached()  # caches the WHOLE view
 def bottleneck_view():
+    app.logger.info(f'Time upon request: {dt.datetime.now()}')
     title = cache.get('title')
     if title is None:
         time.sleep(10)
         cache.set('title', 'Bottleneck Area')
+    app.logger.info(f'Time upon response: {dt.datetime.now()}')
     return render_template('views/bottleneck.html', context={'title':title})
