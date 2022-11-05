@@ -1,6 +1,7 @@
 {% extends 'components/base.html' %}
 
 {% block content %}
+  <h3>Luhmann ID: {{context.zettel.luhmann_identifier}} - Title: {{context.zettel.title}} </h3><br>
   <a href="{{ url_for('zettel_edit_view') }}">Edit</a> <br>
   <a href="{{ url_for('index_view') }}">Delete</a> <br>
 {% endblock content %}

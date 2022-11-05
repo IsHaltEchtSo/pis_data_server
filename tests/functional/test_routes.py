@@ -129,7 +129,7 @@ class TestZettelView:
         WHEN the '/zettel' page is requested (GET)
         THEN check that the response is valid
         """
-        response = test_client.get('/zettel')
+        response = test_client.get('/zettel/2')
 
         assert response.status_code == 200
         
@@ -139,7 +139,7 @@ class TestZettelView:
         WHEN the '/zettel' page is requested (GET)
         THEN check that the links are in place
         """
-        response = test_client.get('/zettel')
+        response = test_client.get('/zettel/2')
 
         assert b"Edit" in response.data
         assert b"Delete" in response.data
