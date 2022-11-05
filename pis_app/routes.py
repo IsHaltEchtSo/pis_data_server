@@ -19,7 +19,6 @@ def index_view():
 
 # Route for 'History' page
 @app.route('/history')
-@login_required
 def history_view():
     return render_template('views/history.html', context={'title': 'History'})
 

@@ -24,7 +24,7 @@ class TestIndexView:
         """
         response = test_client.get('/index')
 
-        assert b"Login" in response.data
+        assert b"Log In" in response.data
         assert b"Digitalize" in response.data
         assert b"Search" in response.data
         assert b"Modifications Checklist" in response.data
@@ -51,7 +51,9 @@ class TestLoginView:
         """
         response = test_client.get('/login')
 
-        assert b"Landing Page" in response.data
+        assert b"Log In" in response.data
+        assert b"Email" in response.data
+        assert b"Password" in response.data
 
 
 class TestHistoryView:
