@@ -4,8 +4,9 @@ See 'rsc/Redirect_Backbone.png' for a diagram of the endpoints.
 #TODO: CUD operations make a new Zettel Update
 from flask import render_template, current_app as app, redirect, flash, url_for
 from flask_login import login_required, current_user
-from .models import RolesEnum, User
+from .models import RolesEnum, User, Zettel
 from .app import cache
+from .forms import ZettelSearchForm
 import time
 import datetime as dt
 
@@ -30,15 +31,35 @@ def manual_view():
 
 
 # Route for 'Zettel Search' page
-@app.route('/zettel_search')
+@app.route('/zettel_search', methods=['POST', 'GET'])
 def zettel_search_view():
-    return render_template('views/zettel_search.html', context={'title': 'Zettel Search'})
+    zettels = []
+
+    form = ZettelSearchForm()
+    if form.validate_on_submit():
+        session = app.Session()
+        if form.luhmann_identifier.data and form.title.data:
+            zettels = session.query(Zettel).filter(Zettel.title.contains(form.title.data), Zettel.luhmann_identifier.contains(form.luhmann_identifier.data))
+        elif form.luhmann_identifier.data:
+            zettels = session.query(Zettel).filter(Zettel.luhmann_identifier.contains(form.luhmann_identifier.data))
+        elif form.title.data:
+            zettels = session.query(Zettel).filter(Zettel.title.contains(form.title.data))
+        else:
+            zettels = session.query(Zettel).all()
+        return render_template('views/zettel_search.html', context={'title': 'Zettel Search', 'zettels':zettels, 'form':form})
+    
+    return render_template('views/zettel_search.html', context={'title': 'Zettel Search', 'zettels':[], 'form':form})
+
+
+
 
 
 # Route for 'Zettel' page
-@app.route('/zettel')
-def zettel_view():
-    return render_template('views/zettel.html', context={'title': 'Zettel'})
+@app.route('/zettel/<int:zettel_id>')
+def zettel_view(zettel_id):
+    session = app.Session()
+    zettel = session.query(Zettel).get(zettel_id)
+    return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel})
 
 
 # Route for 'Zettel Edit' page

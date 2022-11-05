@@ -54,3 +54,14 @@ class LoginForm(FlaskForm):
     )
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log In')
+
+
+class ZettelSearchForm(FlaskForm):
+    """ZettelSearch Form"""
+    luhmann_identifier = StringField(
+        label='Luhmann ID',
+    )
+    title = StringField(
+        label='Title'
+    )
+    submit = SubmitField('Search')

@@ -1,8 +1,32 @@
 {% extends 'components/base.html' %}
 
 {% block content %}
-<a href="{{ url_for('zettel_view') }}">Zettel</a> <br>  # Just a dummy for now 
-  {% for zettel in results %}
-    <a href="{{ url_for('zettel_view') }}">Zettel</a> <br>
+
+  <div>
+
+    <h1>Search Some Zettels</h1>
+
+    <form method="POST" action="/zettel_search">
+      {{ context.form.csrf_token }}
+
+      <fieldset>
+        {{ context.form.luhmann_identifier.label }}
+        {{ context.form.luhmann_identifier(placeholder='1a3d9b2') }}
+      </fieldset>
+
+      <fieldset>
+        {{ context.form.title.label }}
+        {{ context.form.title }}
+      </fieldset>
+
+      <div>
+        {{ context.form.submit }}
+      </div>
+
+    </form>
+  </div>
+
+  {% for zettel in context.zettels %}
+    <a href="{{ url_for('zettel_view', zettel_id=zettel.id) }}">{{ zettel.luhmann_identifier }}: {{ zettel.title }}</a> <br>
   {% endfor %}
 {% endblock content %}
