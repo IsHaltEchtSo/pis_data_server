@@ -1,7 +1,25 @@
 {% extends 'components/base.html' %}
 
 {% block content %}
-  <h3>Luhmann ID: {{context.zettel.luhmann_identifier}} - Title: {{context.zettel.title}} </h3><br>
-  <a href="{{ url_for('zettel_edit_view') }}">Edit</a> <br>
-  <a href="{{ url_for('index_view') }}">Delete</a> <br>
+  <h2>{{context.zettel.luhmann_identifier}} {{context.zettel.title}} </h2>
+
+  <h4>Content</h4> 
+  <p>{{context.zettel.content}}</p>
+
+  <h4>Links</h4>
+  {% for zettel in context.zettel.links %}
+    <a href="{{ url_for('zettel_view', zettel_id=zettel.id)}}">{{zettel.luhmann_identifier}} {{zettel.title}}</a>
+  {% endfor %}
+
+  <h4>Backlinks</h4>
+  {% for zettel in context.zettel.backlinks %}
+    <a href="{{ url_for('zettel_view', zettel_id=zettel.id)}}">{{zettel.luhmann_identifier}} {{zettel.title}}</a>
+  {% endfor %}
+
+  <br>
+  <br>
+
+  <a href="{{ url_for('zettel_edit_view') }}">Edit</a> -
+  <a href="{{ url_for('index_view') }}">Delete</a>
 {% endblock content %}
+
