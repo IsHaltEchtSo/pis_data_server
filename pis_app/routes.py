@@ -6,7 +6,7 @@ from flask import render_template, current_app as app, redirect, flash, url_for
 from flask_login import login_required, current_user
 from .models import RolesEnum, User, Zettel
 from .app import cache
-from .forms import ZettelSearchForm, ZettelEditForm
+from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import time
 import datetime as dt
 
@@ -104,9 +104,20 @@ def digitalize_zettel_view():
 
 
 # Route for 'Label Zettel' page
-@app.route('/label_zettel')
+@app.route('/label_zettel', methods=['POST', 'GET'])
 def label_zettel_view():
-    return render_template('views/label_zettel.html', context={'title': 'Label Zettel'})
+    form = DigitaliseZettelForm()
+    if form.validate_on_submit():
+        zettel = Zettel(
+            luhmann_identifier=form.luhmann_identifier.data,
+            title=form.title.data,
+            content=form.content.data
+        )
+        session = app.Session()
+        session.add(zettel)
+        session.commit()
+        return redirect(url_for('zettel_view', zettel_id=zettel.id))
+    return render_template('views/label_zettel.html', context={'title': 'Label Zettel', 'form': form})
 
 
 # Route for 'Success' page
