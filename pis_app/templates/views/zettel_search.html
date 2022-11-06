@@ -26,7 +26,7 @@
     </form>
   </div>
 
-  {% for zettel in context.zettels %}
+  {% for zettel in context.zettels|sort(attribute='luhmann_identifier') %}
     <a href="{{ url_for('zettel_view', zettel_id=zettel.id) }}">{{ zettel.luhmann_identifier }}: {{ zettel.title }}</a> <br>
   {% endfor %}
 {% endblock content %}
