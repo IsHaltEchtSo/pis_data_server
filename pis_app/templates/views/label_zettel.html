@@ -1,5 +1,34 @@
 {% extends 'components/base.html' %}
 
 {% block content %}
-  <a href="{{ url_for('success_view') }}">Success</a> <br>
+
+  <h3>Go ahead, create a nice little zettel</h3>
+
+  <form method="POST" action="/label_zettel">
+    {{ context.form.csrf_token }}
+
+    <fieldset>
+      {{ context.form.luhmann_identifier.label }}
+      {{ context.form.luhmann_identifier }}
+      {% for error in context.form.luhmann_identifier.errors %}
+        {{ error }}
+      {% endfor %}
+    </fieldset>
+
+    <fieldset>
+      {{ context.form.title.label }}
+      {{ context.form.title }}
+    </fieldset>
+
+    <fieldset>
+      {{ context.form.content.label }}
+      {{ context.form.content }}
+    </fieldset>
+
+    <div>
+      {{ context.form.submit }}
+    </div>
+
+  </form>
+
 {% endblock content %}

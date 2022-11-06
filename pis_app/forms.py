@@ -79,3 +79,24 @@ class ZettelEditForm(FlaskForm):
         label='Content'
     )
     submit = SubmitField('Save')
+
+
+class DigitaliseZettelForm(FlaskForm):
+    """Form to capture data for new Zettels"""
+    luhmann_identifier = StringField(
+        label='Luhmann ID',
+        validators=[
+            DataRequired()
+        ]
+    )
+    title = StringField(
+        label='Title',
+        validators=[
+            DataRequired()
+        ]
+    )
+    content = TextAreaField(
+        label='Content'
+    )
+    submit = SubmitField('Save')
+
