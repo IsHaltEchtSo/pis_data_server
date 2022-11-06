@@ -1,6 +1,6 @@
 """Sign-up & log-in forms."""
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import (
     DataRequired,
     Email,
@@ -65,3 +65,17 @@ class ZettelSearchForm(FlaskForm):
         label='Title'
     )
     submit = SubmitField('Search')
+
+
+class ZettelEditForm(FlaskForm):
+    """Form to edit Zettel"""
+    luhmann_identifier = StringField(
+        label='Luhmann ID'
+    )
+    title = StringField(
+        label='Title',
+    )
+    content = TextAreaField(
+        label='Content'
+    )
+    submit = SubmitField('Save')
