@@ -6,7 +6,7 @@ from flask import render_template, current_app as app, redirect, flash, url_for
 from flask_login import login_required, current_user
 from .models import RolesEnum, User, Zettel
 from .app import cache
-from .forms import ZettelSearchForm
+from .forms import ZettelSearchForm, ZettelEditForm
 import time
 import datetime as dt
 
@@ -63,9 +63,32 @@ def zettel_view(zettel_id):
 
 
 # Route for 'Zettel Edit' page
-@app.route('/zettel_edit')
-def zettel_edit_view():
-    return render_template('views/zettel_edit.html', context={'title': 'Zettel Edit'})
+@app.route('/zettel_edit/<int:zettel_id>', methods=['POST', 'GET'])
+def zettel_edit_view(zettel_id):
+    session = app.Session()
+    zettel = session.query(Zettel).get(zettel_id)
+    
+    form = ZettelEditForm()
+    if form.validate_on_submit():
+        zettel_altered = False
+        if form.luhmann_identifier.data:
+            zettel.luhmann_identifier = form.luhmann_identifier.data
+            zettel_altered = True
+        if form.title.data:
+            zettel.title = form.title.data
+            zettel_altered = True
+        if form.content.data:
+            zettel.content = form.content.data
+            zettel_altered = True
+        
+        if zettel_altered:
+            session.add(zettel)
+            session.commit()
+            flash(f'{zettel} successfully edited!')
+        
+        return redirect(url_for('zettel_view', zettel_id=zettel.id))
+
+    return render_template('views/zettel_edit.html', context={'title': 'Zettel Edit', 'zettel':zettel, 'form':form})
 
 
 # Route for 'Checklist' page
@@ -114,3 +137,13 @@ def bottleneck_view():
         cache.set('title', 'Bottleneck Area')
     app.logger.info(f'Time upon response: {dt.datetime.now()}')
     return render_template('views/bottleneck.html', context={'title':title})
+
+
+@app.route('/delete/<int:zettel_id>')
+def delete_zettel(zettel_id):
+    session = app.Session()
+    zettel = session.query(Zettel).get(zettel_id)
+    session.delete(zettel)
+    session.commit()
+    flash(f"{zettel} was deleted")
+    return redirect(url_for('index_view'))

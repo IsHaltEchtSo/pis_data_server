@@ -1,5 +1,34 @@
 {% extends 'components/base.html' %}
 
 {% block content %}
-  <a href="{{ url_for('success_view') }}">Success</a> <br>
-{% endblock content %}
+
+  <div>
+
+    <h1>Edit {{ context.zettel.luhmann_identifier}} {{context.zettel.title}}</h1>
+
+    <form method="POST" action="/zettel_edit/{{context.zettel.id}}">
+      {{ context.form.csrf_token }}
+
+      <fieldset>
+        {{ context.form.luhmann_identifier.label }}
+        {{ context.form.luhmann_identifier(placeholder=context.zettel.luhmann_identifier) }}
+      </fieldset>
+
+      <fieldset>
+        {{ context.form.title.label }}
+        {{ context.form.title(placeholder=context.zettel.title) }}
+      </fieldset>
+
+      <fieldset>
+        {{ context.form.content.label }}
+        {{ context.form.content(placeholder=context.zettel.content) }}
+      </fieldset>
+
+      <div>
+        {{ context.form.submit }}
+      </div>
+
+    </form>
+  </div>
+
+{% endblock %}

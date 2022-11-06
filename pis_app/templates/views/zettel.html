@@ -19,7 +19,7 @@
   <br>
   <br>
 
-  <a href="{{ url_for('zettel_edit_view') }}">Edit</a> -
-  <a href="{{ url_for('index_view') }}">Delete</a>
+  <a href="{{ url_for('zettel_edit_view', zettel_id=context.zettel.id) }}">Edit</a> -
+  <a href="{{ url_for('delete_zettel', zettel_id=context.zettel.id) }}">Delete</a>
 {% endblock content %}
 
