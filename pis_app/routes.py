@@ -9,6 +9,8 @@ from .app import cache
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import time
 import datetime as dt
+from sqlalchemy.exc import IntegrityError
+
 
 
 # Route for 'Home' page
@@ -59,9 +61,9 @@ def zettel_search_view():
 def zettel_view(zettel_id):
     session = app.Session()
     zettel = session.query(Zettel).get(zettel_id)
-    return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel})
+    return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel, 'RolesEnum': RolesEnum})
 
-
+# TODO: links and backlinks
 # Route for 'Zettel Edit' page
 @app.route('/zettel_edit/<int:zettel_id>', methods=['POST', 'GET'])
 def zettel_edit_view(zettel_id):
@@ -82,12 +84,15 @@ def zettel_edit_view(zettel_id):
             zettel_altered = True
         
         if zettel_altered:
-            session.add(zettel)
-            session.commit()
-            flash(f'{zettel} successfully edited!')
+            try:
+                session.add(zettel)
+                session.commit()
+                flash(f'[{zettel.luhmann_identifier}: {zettel.title}] successfully edited!')
+                return redirect(url_for('zettel_view', zettel_id=zettel.id))
+            except IntegrityError:
+                flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
+                return redirect(url_for('zettel_edit_view', zettel_id=zettel_id))
         
-        return redirect(url_for('zettel_view', zettel_id=zettel.id))
-
     return render_template('views/zettel_edit.html', context={'title': 'Zettel Edit', 'zettel':zettel, 'form':form})
 
 
@@ -102,7 +107,7 @@ def checklist_view():
 def digitalize_zettel_view():
     return render_template('views/digitalize_zettel.html', context={'title': 'Digitalize Zettel'})
 
-
+# TODO: links and backlinks
 # Route for 'Label Zettel' page
 @app.route('/label_zettel', methods=['POST', 'GET'])
 def label_zettel_view():
@@ -113,10 +118,15 @@ def label_zettel_view():
             title=form.title.data,
             content=form.content.data
         )
-        session = app.Session()
-        session.add(zettel)
-        session.commit()
-        return redirect(url_for('zettel_view', zettel_id=zettel.id))
+        try:
+            session = app.Session()
+            session.add(zettel)
+            session.commit()
+            return redirect(url_for('zettel_view', zettel_id=zettel.id))
+        except IntegrityError:
+            flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
+            return redirect(url_for('label_zettel_view'))
+
     return render_template('views/label_zettel.html', context={'title': 'Label Zettel', 'form': form})
 
 
@@ -151,10 +161,11 @@ def bottleneck_view():
 
 
 @app.route('/delete/<int:zettel_id>')
+@login_required
 def delete_zettel(zettel_id):
     session = app.Session()
     zettel = session.query(Zettel).get(zettel_id)
     session.delete(zettel)
     session.commit()
-    flash(f"{zettel} was deleted")
+    flash(f"[{zettel.luhmann_identifier} {zettel.title}] was deleted")
     return redirect(url_for('index_view'))
