@@ -9,6 +9,9 @@ from .app import cache
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import time
 import datetime as dt
+from sqlalchemy.exc import IntegrityError
+import uuid
+
 
 
 # Route for 'Home' page
@@ -51,15 +54,12 @@ def zettel_search_view():
     return render_template('views/zettel_search.html', context={'title': 'Zettel Search', 'zettels':[], 'form':form})
 
 
-
-
-
 # Route for 'Zettel' page
 @app.route('/zettel/<int:zettel_id>')
 def zettel_view(zettel_id):
     session = app.Session()
     zettel = session.query(Zettel).get(zettel_id)
-    return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel})
+    return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel, 'RolesEnum': RolesEnum})
 
 
 # Route for 'Zettel Edit' page
@@ -74,20 +74,47 @@ def zettel_edit_view(zettel_id):
         if form.luhmann_identifier.data:
             zettel.luhmann_identifier = form.luhmann_identifier.data
             zettel_altered = True
+
         if form.title.data:
             zettel.title = form.title.data
             zettel_altered = True
+        
         if form.content.data:
             zettel.content = form.content.data
             zettel_altered = True
-        
-        if zettel_altered:
-            session.add(zettel)
-            session.commit()
-            flash(f'{zettel} successfully edited!')
-        
-        return redirect(url_for('zettel_view', zettel_id=zettel.id))
 
+        if form.links.data:
+            link_ids = form.links.data.split(',')
+            for link_id in link_ids:
+                link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == link_id).scalar()
+                if link_zettel:
+                    zettel.links.append(link_zettel)
+                else:
+                    link_zettel = Zettel(luhmann_identifier=link_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                    zettel.links.append(link_zettel)
+                zettel_altered = True
+        
+        if form.backlinks.data:
+            backlink_ids = form.backlinks.data.split(',')
+            for backlink_id in backlink_ids:
+                backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == backlink_id).scalar()
+                if backlink_zettel:
+                    zettel.backlinks.append(backlink_zettel)
+                else: 
+                    backlink_zettel = Zettel(luhmann_identifier=backlink_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                    zettel.backlinks.append(backlink_zettel)
+                zettel_altered = True
+
+        if zettel_altered:
+            try:
+                session.add(zettel)
+                session.commit()
+                flash(f'[{zettel.luhmann_identifier}: {zettel.title}] successfully edited!')
+                return redirect(url_for('zettel_view', zettel_id=zettel.id))
+            except IntegrityError:
+                flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
+                return redirect(url_for('zettel_edit_view', zettel_id=zettel_id))
+        
     return render_template('views/zettel_edit.html', context={'title': 'Zettel Edit', 'zettel':zettel, 'form':form})
 
 
@@ -114,9 +141,35 @@ def label_zettel_view():
             content=form.content.data
         )
         session = app.Session()
-        session.add(zettel)
-        session.commit()
-        return redirect(url_for('zettel_view', zettel_id=zettel.id))
+
+        if form.links.data:
+            link_ids = form.links.data.split(',')
+            for link_id in link_ids:
+                link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == link_id).scalar()
+                if link_zettel:
+                    zettel.links.append(link_zettel)
+                else:
+                    link_zettel = Zettel(luhmann_identifier=link_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                    zettel.links.append(link_zettel)
+        
+        if form.backlinks.data:
+            backlink_ids = form.backlinks.data.split(',')
+            for backlink_id in backlink_ids:
+                backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == backlink_id).scalar()
+                if backlink_zettel:
+                    zettel.backlinks.append(backlink_zettel)
+                else: 
+                    backlink_zettel = Zettel(luhmann_identifier=backlink_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                    zettel.backlinks.append(backlink_zettel)
+
+        try:
+            session.add(zettel)
+            session.commit()
+            return redirect(url_for('zettel_view', zettel_id=zettel.id))
+        except IntegrityError:
+            flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
+            return redirect(url_for('label_zettel_view'))
+
     return render_template('views/label_zettel.html', context={'title': 'Label Zettel', 'form': form})
 
 
@@ -151,10 +204,11 @@ def bottleneck_view():
 
 
 @app.route('/delete/<int:zettel_id>')
+@login_required
 def delete_zettel(zettel_id):
     session = app.Session()
     zettel = session.query(Zettel).get(zettel_id)
     session.delete(zettel)
     session.commit()
-    flash(f"{zettel} was deleted")
+    flash(f"[{zettel.luhmann_identifier} {zettel.title}] was deleted")
     return redirect(url_for('index_view'))
