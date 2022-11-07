@@ -24,6 +24,16 @@
         {{ context.form.content(placeholder=context.zettel.content) }}
       </fieldset>
 
+      <fieldset>
+        {{ context.form.links.label }}
+        {{ context.form.links(placeholder=context.zettel.links) }}
+      </fieldset>
+
+      <fieldset>
+        {{ context.form.backlinks.label }}
+        {{ context.form.backlinks(placeholder=context.zettel.backlinks) }}
+      </fieldset>
+
       <div>
         {{ context.form.submit }}
       </div>

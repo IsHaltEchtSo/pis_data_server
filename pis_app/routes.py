@@ -10,6 +10,7 @@ from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import time
 import datetime as dt
 from sqlalchemy.exc import IntegrityError
+import uuid
 
 
 
@@ -53,9 +54,6 @@ def zettel_search_view():
     return render_template('views/zettel_search.html', context={'title': 'Zettel Search', 'zettels':[], 'form':form})
 
 
-
-
-
 # Route for 'Zettel' page
 @app.route('/zettel/<int:zettel_id>')
 def zettel_view(zettel_id):
@@ -63,7 +61,7 @@ def zettel_view(zettel_id):
     zettel = session.query(Zettel).get(zettel_id)
     return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel, 'RolesEnum': RolesEnum})
 
-# TODO: links and backlinks
+
 # Route for 'Zettel Edit' page
 @app.route('/zettel_edit/<int:zettel_id>', methods=['POST', 'GET'])
 def zettel_edit_view(zettel_id):
@@ -76,13 +74,33 @@ def zettel_edit_view(zettel_id):
         if form.luhmann_identifier.data:
             zettel.luhmann_identifier = form.luhmann_identifier.data
             zettel_altered = True
+
         if form.title.data:
             zettel.title = form.title.data
             zettel_altered = True
+        
         if form.content.data:
             zettel.content = form.content.data
             zettel_altered = True
+
+        if form.links.data:
+            link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == form.links.data).scalar()
+            if link_zettel:
+                zettel.links.append(link_zettel)
+            else:
+                link_zettel = Zettel(luhmann_identifier=form.links.data, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                zettel.links.append(link_zettel)
+            zettel_altered = True
         
+        if form.backlinks.data:
+            backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == form.backlinks.data).scalar()
+            if backlink_zettel:
+                zettel.backlinks.append(backlink_zettel)
+            else: 
+                backlink_zettel = Zettel(luhmann_identifier=form.backlinks.data, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                zettel.backlinks.append(backlink_zettel)
+            zettel_altered = True
+
         if zettel_altered:
             try:
                 session.add(zettel)
@@ -107,7 +125,7 @@ def checklist_view():
 def digitalize_zettel_view():
     return render_template('views/digitalize_zettel.html', context={'title': 'Digitalize Zettel'})
 
-# TODO: links and backlinks
+
 # Route for 'Label Zettel' page
 @app.route('/label_zettel', methods=['POST', 'GET'])
 def label_zettel_view():
@@ -118,8 +136,26 @@ def label_zettel_view():
             title=form.title.data,
             content=form.content.data
         )
+        session = app.Session()
+
+        if form.links.data:
+            link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == form.links.data).scalar()
+            if link_zettel:
+                zettel.links.append(link_zettel)
+            else:
+                link_zettel = Zettel(luhmann_identifier=form.links.data, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                zettel.links.append(link_zettel)
+        
+        if form.backlinks.data:
+            backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == form.backlinks.data).scalar()
+            if backlink_zettel:
+                zettel.backlinks.append(backlink_zettel)
+            else: 
+                backlink_zettel = Zettel(luhmann_identifier=form.backlinks.data, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                zettel.backlinks.append(backlink_zettel)
+
+
         try:
-            session = app.Session()
             session.add(zettel)
             session.commit()
             return redirect(url_for('zettel_view', zettel_id=zettel.id))

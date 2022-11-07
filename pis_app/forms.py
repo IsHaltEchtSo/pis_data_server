@@ -78,6 +78,12 @@ class ZettelEditForm(FlaskForm):
     content = TextAreaField(
         label='Content'
     )
+    links = StringField(
+        label="Links"
+    )
+    backlinks = StringField(
+        label="Backlinks"
+    )
     submit = SubmitField('Save')
 
 
@@ -97,6 +103,12 @@ class DigitaliseZettelForm(FlaskForm):
     )
     content = TextAreaField(
         label='Content'
+    )
+    links = StringField(
+        label='Links'
+    )
+    backlinks = StringField(
+        label='Backlinks'
     )
     submit = SubmitField('Save')
 
