@@ -84,22 +84,26 @@ def zettel_edit_view(zettel_id):
             zettel_altered = True
 
         if form.links.data:
-            link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == form.links.data).scalar()
-            if link_zettel:
-                zettel.links.append(link_zettel)
-            else:
-                link_zettel = Zettel(luhmann_identifier=form.links.data, title=f"Placeholder Title: <{uuid.uuid4()}>")
-                zettel.links.append(link_zettel)
-            zettel_altered = True
+            link_ids = form.links.data.split(',')
+            for link_id in link_ids:
+                link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == link_id).scalar()
+                if link_zettel:
+                    zettel.links.append(link_zettel)
+                else:
+                    link_zettel = Zettel(luhmann_identifier=link_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                    zettel.links.append(link_zettel)
+                zettel_altered = True
         
         if form.backlinks.data:
-            backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == form.backlinks.data).scalar()
-            if backlink_zettel:
-                zettel.backlinks.append(backlink_zettel)
-            else: 
-                backlink_zettel = Zettel(luhmann_identifier=form.backlinks.data, title=f"Placeholder Title: <{uuid.uuid4()}>")
-                zettel.backlinks.append(backlink_zettel)
-            zettel_altered = True
+            backlink_ids = form.backlinks.data.split(',')
+            for backlink_id in backlink_ids:
+                backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == backlink_id).scalar()
+                if backlink_zettel:
+                    zettel.backlinks.append(backlink_zettel)
+                else: 
+                    backlink_zettel = Zettel(luhmann_identifier=backlink_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                    zettel.backlinks.append(backlink_zettel)
+                zettel_altered = True
 
         if zettel_altered:
             try:
@@ -139,21 +143,24 @@ def label_zettel_view():
         session = app.Session()
 
         if form.links.data:
-            link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == form.links.data).scalar()
-            if link_zettel:
-                zettel.links.append(link_zettel)
-            else:
-                link_zettel = Zettel(luhmann_identifier=form.links.data, title=f"Placeholder Title: <{uuid.uuid4()}>")
-                zettel.links.append(link_zettel)
+            link_ids = form.links.data.split(',')
+            for link_id in link_ids:
+                link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == link_id).scalar()
+                if link_zettel:
+                    zettel.links.append(link_zettel)
+                else:
+                    link_zettel = Zettel(luhmann_identifier=link_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                    zettel.links.append(link_zettel)
         
         if form.backlinks.data:
-            backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == form.backlinks.data).scalar()
-            if backlink_zettel:
-                zettel.backlinks.append(backlink_zettel)
-            else: 
-                backlink_zettel = Zettel(luhmann_identifier=form.backlinks.data, title=f"Placeholder Title: <{uuid.uuid4()}>")
-                zettel.backlinks.append(backlink_zettel)
-
+            backlink_ids = form.backlinks.data.split(',')
+            for backlink_id in backlink_ids:
+                backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == backlink_id).scalar()
+                if backlink_zettel:
+                    zettel.backlinks.append(backlink_zettel)
+                else: 
+                    backlink_zettel = Zettel(luhmann_identifier=backlink_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
+                    zettel.backlinks.append(backlink_zettel)
 
         try:
             session.add(zettel)
