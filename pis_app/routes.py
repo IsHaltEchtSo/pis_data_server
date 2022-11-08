@@ -56,20 +56,20 @@ def zettel_search_view():
 
 
 # Route for 'Zettel' page
-@app.route('/zettel/<int:zettel_id>')
-def zettel_view(zettel_id):
+@app.route('/zettel/<string:luhmann_id>')
+def zettel_view(luhmann_id):
     session = app.get_db_session()
-    zettel = session.query(Zettel).get(zettel_id)
+    zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).one()
     if zettel:
     return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel, 'RolesEnum': RolesEnum})
     abort(404)
 
 
 # Route for 'Zettel Edit' page
-@app.route('/zettel_edit/<int:zettel_id>', methods=['POST', 'GET'])
-def zettel_edit_view(zettel_id):
+@app.route('/zettel_edit/<string:luhmann_id>', methods=['POST', 'GET'])
+def zettel_edit_view(luhmann_id):
     session = app.get_db_session()
-    zettel = session.query(Zettel).get(zettel_id)
+    zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).one()
     
     form = ZettelEditForm()
     if form.validate_on_submit():
@@ -113,10 +113,10 @@ def zettel_edit_view(zettel_id):
                 session.add(zettel)
                 session.commit()
                 flash(f'[{zettel.luhmann_identifier}: {zettel.title}] successfully edited!')
-                return redirect(url_for('zettel_view', zettel_id=zettel.id))
+                return redirect(url_for('zettel_view', luhmann_id=zettel.luhmann_identifier))
             except IntegrityError:
                 flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
-                return redirect(url_for('zettel_edit_view', zettel_id=zettel_id))
+                return redirect(url_for('zettel_edit_view', luhmann_id=luhmann_id))
     if zettel: 
     return render_template('views/zettel_edit.html', context={'title': 'Zettel Edit', 'zettel':zettel, 'form':form})
     abort(404)
@@ -168,7 +168,7 @@ def label_zettel_view():
         try:
             session.add(zettel)
             session.commit()
-            return redirect(url_for('zettel_view', zettel_id=zettel.id))
+            return redirect(url_for('zettel_view', luhmann_id=zettel.luhmann_identifier))
         except IntegrityError:
             flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
             return redirect(url_for('label_zettel_view'))
@@ -206,11 +206,11 @@ def bottleneck_view():
     return render_template('views/bottleneck.html', context={'title':title})
 
 
-@app.route('/delete/<int:zettel_id>')
+@app.route('/delete/<string:luhmann_id>')
 @login_required
-def delete_zettel(zettel_id):
+def delete_zettel(luhmann_id):
     session = app.get_db_session()
-    zettel = session.query(Zettel).get(zettel_id)
+    zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).one()
     if zettel:
     session.delete(zettel)
     session.commit()
