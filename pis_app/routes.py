@@ -84,7 +84,7 @@ def zettel_edit_view(zettel_id):
             zettel_altered = True
 
         if form.links.data:
-            link_ids = form.links.data.split(',')
+            link_ids = [link.strip() for link in form.links.data.split(',')]
             for link_id in link_ids:
                 link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == link_id).scalar()
                 if link_zettel:
@@ -95,7 +95,7 @@ def zettel_edit_view(zettel_id):
                 zettel_altered = True
         
         if form.backlinks.data:
-            backlink_ids = form.backlinks.data.split(',')
+            backlink_ids = [backlink.strip() for backlink in form.backlinks.data.split(',')]
             for backlink_id in backlink_ids:
                 backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == backlink_id).scalar()
                 if backlink_zettel:
@@ -143,7 +143,7 @@ def label_zettel_view():
         session = app.Session()
 
         if form.links.data:
-            link_ids = form.links.data.split(',')
+            link_ids = [link.strip() for link in form.links.data.split(',')]
             for link_id in link_ids:
                 link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == link_id).scalar()
                 if link_zettel:
@@ -153,7 +153,7 @@ def label_zettel_view():
                     zettel.links.append(link_zettel)
         
         if form.backlinks.data:
-            backlink_ids = form.backlinks.data.split(',')
+            backlink_ids = [backlink.strip() for backlink in form.backlinks.data.split(',')]
             for backlink_id in backlink_ids:
                 backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == backlink_id).scalar()
                 if backlink_zettel:
