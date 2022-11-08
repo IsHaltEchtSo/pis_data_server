@@ -2,16 +2,17 @@
 See 'rsc/Redirect_Backbone.png' for a diagram of the endpoints.
 """
 #TODO: CUD operations make a new Zettel Update
-from flask import render_template, current_app as app, redirect, flash, url_for
+from flask import render_template, current_app as app, redirect, flash, url_for, abort
 from flask_login import login_required, current_user
-from .models import RolesEnum, User, Zettel
+from .models import User, Zettel
+from .constants import RolesEnum
 from .app import cache
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import time
 import datetime as dt
 from sqlalchemy.exc import IntegrityError
 import uuid
-
+import pis_app.errorhandlers
 
 
 # Route for 'Home' page
@@ -59,7 +60,9 @@ def zettel_search_view():
 def zettel_view(zettel_id):
     session = app.get_db_session()
     zettel = session.query(Zettel).get(zettel_id)
+    if zettel:
     return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel, 'RolesEnum': RolesEnum})
+    abort(404)
 
 
 # Route for 'Zettel Edit' page
@@ -114,9 +117,9 @@ def zettel_edit_view(zettel_id):
             except IntegrityError:
                 flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
                 return redirect(url_for('zettel_edit_view', zettel_id=zettel_id))
-        
+    if zettel: 
     return render_template('views/zettel_edit.html', context={'title': 'Zettel Edit', 'zettel':zettel, 'form':form})
-
+    abort(404)
 
 # Route for 'Checklist' page
 @app.route('/checklist')
@@ -208,7 +211,9 @@ def bottleneck_view():
 def delete_zettel(zettel_id):
     session = app.get_db_session()
     zettel = session.query(Zettel).get(zettel_id)
+    if zettel:
     session.delete(zettel)
     session.commit()
     flash(f"[{zettel.luhmann_identifier} {zettel.title}] was deleted")
     return redirect(url_for('index_view'))
+    abort(404)
