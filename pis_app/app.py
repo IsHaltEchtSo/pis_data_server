@@ -8,7 +8,7 @@ login_manager = LoginManager()
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache', "CACHE_DEFAULT_TIMEOUT": 300})
 
 def create_app(config_object=None):
-    app = Flask(__name__, )
+    app = MyFlask(__name__, )
 
     
     # Load Dev Config if no config object is provided
@@ -49,7 +49,7 @@ class AppInitializer:
         from pis_app.database import Session
         import pis_app.models
 
-        self.flask_app.Session = Session
+        self.flask_app._DBSession = Session
 
     def init_app_in_ctx(self) -> None:
         """
@@ -68,3 +68,9 @@ class AppInitializer:
 
         with self.flask_app.app_context():
             self.init_app_in_ctx()
+
+
+class MyFlask(Flask):
+    def get_db_session(self):
+        return self._DBSession()
+

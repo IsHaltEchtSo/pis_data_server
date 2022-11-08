@@ -40,7 +40,7 @@ def zettel_search_view():
 
     form = ZettelSearchForm()
     if form.validate_on_submit():
-        session = app.Session()
+        session = app.get_db_session()
         if form.luhmann_identifier.data and form.title.data:
             zettels = session.query(Zettel).filter(Zettel.title.contains(form.title.data), Zettel.luhmann_identifier.contains(form.luhmann_identifier.data))
         elif form.luhmann_identifier.data:
@@ -57,7 +57,7 @@ def zettel_search_view():
 # Route for 'Zettel' page
 @app.route('/zettel/<int:zettel_id>')
 def zettel_view(zettel_id):
-    session = app.Session()
+    session = app.get_db_session()
     zettel = session.query(Zettel).get(zettel_id)
     return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel, 'RolesEnum': RolesEnum})
 
@@ -65,7 +65,7 @@ def zettel_view(zettel_id):
 # Route for 'Zettel Edit' page
 @app.route('/zettel_edit/<int:zettel_id>', methods=['POST', 'GET'])
 def zettel_edit_view(zettel_id):
-    session = app.Session()
+    session = app.get_db_session()
     zettel = session.query(Zettel).get(zettel_id)
     
     form = ZettelEditForm()
@@ -140,7 +140,7 @@ def label_zettel_view():
             title=form.title.data,
             content=form.content.data
         )
-        session = app.Session()
+        session = app.get_db_session()
 
         if form.links.data:
             link_ids = [link.strip() for link in form.links.data.split(',')]
@@ -184,7 +184,7 @@ def success_view():
 @login_required
 def admin_view():
     if current_user.role == RolesEnum.ADMIN.value:
-        session = app.Session()
+        session = app.get_db_session()
         users = session.query(User).all()
         return render_template('views/admin.html', context={'title':'Admin Area', 'RolesEnum': RolesEnum, 'users':users})
     flash('You are not an admin!')
@@ -206,7 +206,7 @@ def bottleneck_view():
 @app.route('/delete/<int:zettel_id>')
 @login_required
 def delete_zettel(zettel_id):
-    session = app.Session()
+    session = app.get_db_session()
     zettel = session.query(Zettel).get(zettel_id)
     session.delete(zettel)
     session.commit()
