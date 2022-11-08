@@ -11,7 +11,6 @@ from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import time
 import datetime as dt
 from sqlalchemy.exc import IntegrityError
-import uuid
 import pis_app.errorhandlers
 from .utility import ZettelFactory
 
@@ -67,7 +66,7 @@ def zettel_view(luhmann_id):
     session = app.get_db_session()
     zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).one()
     if zettel:
-    return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel, 'RolesEnum': RolesEnum})
+        return render_template('views/zettel.html', context={'title': zettel.title, 'zettel':zettel, 'RolesEnum': RolesEnum})
     abort(404)
 
 
@@ -75,57 +74,26 @@ def zettel_view(luhmann_id):
 @app.route('/zettel_edit/<string:luhmann_id>', methods=['POST', 'GET'])
 def zettel_edit_view(luhmann_id):
     session = app.get_db_session()
-    zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).one()
+    zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).scalar()
+
+    if not zettel:
+        abort(404)
     
     form = ZettelEditForm()
     if form.validate_on_submit():
-        zettel_altered = False
-        if form.luhmann_identifier.data:
-            zettel.luhmann_identifier = form.luhmann_identifier.data
-            zettel_altered = True
 
-        if form.title.data:
-            zettel.title = form.title.data
-            zettel_altered = True
-        
-        if form.content.data:
-            zettel.content = form.content.data
-            zettel_altered = True
+        updated_zettel = ZettelFactory(form=form, db_session=session).update_zettel(zettel=zettel)
 
-        if form.links.data:
-            link_ids = [link.strip() for link in form.links.data.split(',')]
-            for link_id in link_ids:
-                link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == link_id).scalar()
-                if link_zettel:
-                    zettel.links.append(link_zettel)
-                else:
-                    link_zettel = Zettel(luhmann_identifier=link_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
-                    zettel.links.append(link_zettel)
-                zettel_altered = True
-        
-        if form.backlinks.data:
-            backlink_ids = [backlink.strip() for backlink in form.backlinks.data.split(',')]
-            for backlink_id in backlink_ids:
-                backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == backlink_id).scalar()
-                if backlink_zettel:
-                    zettel.backlinks.append(backlink_zettel)
-                else: 
-                    backlink_zettel = Zettel(luhmann_identifier=backlink_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
-                    zettel.backlinks.append(backlink_zettel)
-                zettel_altered = True
+        try:
+            session.add(updated_zettel)
+            session.commit()
+            return redirect(url_for('zettel_view', luhmann_id=updated_zettel.luhmann_identifier))
+        except IntegrityError:
+            flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
+            return redirect(url_for('zettel_edit_view', luhmann_id=luhmann_id))
 
-        if zettel_altered:
-            try:
-                session.add(zettel)
-                session.commit()
-                flash(f'[{zettel.luhmann_identifier}: {zettel.title}] successfully edited!')
-                return redirect(url_for('zettel_view', luhmann_id=zettel.luhmann_identifier))
-            except IntegrityError:
-                flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
-                return redirect(url_for('zettel_edit_view', luhmann_id=luhmann_id))
-    if zettel: 
     return render_template('views/zettel_edit.html', context={'title': 'Zettel Edit', 'zettel':zettel, 'form':form})
-    abort(404)
+
 
 # Route for 'Checklist' page
 @app.route('/checklist')
@@ -144,11 +112,6 @@ def digitalize_zettel_view():
 def label_zettel_view():
     form = DigitaliseZettelForm()
     if form.validate_on_submit():
-        zettel = Zettel(
-            luhmann_identifier=form.luhmann_identifier.data,
-            title=form.title.data,
-            content=form.content.data
-        )
         session = app.get_db_session()
 
         zettel = ZettelFactory(form=form, db_session=session).create_zettel()
@@ -200,8 +163,8 @@ def delete_zettel(luhmann_id):
     session = app.get_db_session()
     zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).one()
     if zettel:
-    session.delete(zettel)
-    session.commit()
-    flash(f"[{zettel.luhmann_identifier} {zettel.title}] was deleted")
-    return redirect(url_for('index_view'))
+        session.delete(zettel)
+        session.commit()
+        flash(f"[{zettel.luhmann_identifier} {zettel.title}] was deleted")
+        return redirect(url_for('index_view'))
     abort(404)

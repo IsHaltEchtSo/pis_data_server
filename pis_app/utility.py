@@ -14,9 +14,16 @@ class ZettelFactory():
 
     def create_zettel(self) -> Zettel:
         zettel = self._zettel_instantiation()
-        self._add_links(zettel)
-        self._add_backlinks(zettel)
+        self._update_links(zettel)
+        self._update_backlinks(zettel)
 
+        return zettel
+
+
+    def update_zettel(self, zettel: Zettel) -> Zettel:
+        self._update_data(zettel)
+        self._update_links(zettel, purge=True)
+        self._update_backlinks(zettel, purge=True)
         return zettel
 
 
@@ -29,8 +36,18 @@ class ZettelFactory():
         return zettel
 
 
-    def _add_links(self, zettel: Zettel) -> None:
+    def _update_data(self, zettel: Zettel) -> None:
+        if self.form.luhmann_identifier.data:
+            zettel.luhmann_identifier = self.form.luhmann_identifier.data
+        if self.form.title.data:
+            zettel.title = self.form.title.data
+        if self.form.content.data:
+            zettel.content = self.form.content.data
+
+    def _update_links(self, zettel: Zettel, purge=False) -> None:
         if self.form.links.data:
+            if purge:
+                zettel.links.clear()
             link_ids = [link.strip() for link in self.form.links.data.split(',')]
             for link_id in link_ids:
                 link_zettel = self.db_session \
@@ -47,8 +64,10 @@ class ZettelFactory():
                     zettel.links.append(link_zettel)
 
 
-    def _add_backlinks(self, zettel: Zettel) -> None:
+    def _update_backlinks(self, zettel: Zettel, purge=False) -> None:
         if self.form.backlinks.data:
+            if purge:
+                zettel.backlinks.clear()
             backlink_ids = [backlink.strip() for backlink in self.form.backlinks.data.split(',')]
             for backlink_id in backlink_ids:
                 backlink_zettel = self.db_session \
