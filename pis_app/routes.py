@@ -13,6 +13,7 @@ import datetime as dt
 from sqlalchemy.exc import IntegrityError
 import uuid
 import pis_app.errorhandlers
+from .utility import ZettelFactory
 
 
 # Route for 'Home' page
@@ -145,25 +146,7 @@ def label_zettel_view():
         )
         session = app.get_db_session()
 
-        if form.links.data:
-            link_ids = [link.strip() for link in form.links.data.split(',')]
-            for link_id in link_ids:
-                link_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == link_id).scalar()
-                if link_zettel:
-                    zettel.links.append(link_zettel)
-                else:
-                    link_zettel = Zettel(luhmann_identifier=link_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
-                    zettel.links.append(link_zettel)
-        
-        if form.backlinks.data:
-            backlink_ids = [backlink.strip() for backlink in form.backlinks.data.split(',')]
-            for backlink_id in backlink_ids:
-                backlink_zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == backlink_id).scalar()
-                if backlink_zettel:
-                    zettel.backlinks.append(backlink_zettel)
-                else: 
-                    backlink_zettel = Zettel(luhmann_identifier=backlink_id, title=f"Placeholder Title: <{uuid.uuid4()}>")
-                    zettel.backlinks.append(backlink_zettel)
+        zettel = ZettelFactory(form=form, db_session=session).create_zettel()
 
         try:
             session.add(zettel)
