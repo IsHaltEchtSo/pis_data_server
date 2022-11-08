@@ -9,8 +9,7 @@ venv/
 __pycache__/
 
 # Flask specific files
-*local_config.py
-logger.log
+/instance
 
 # CI specific files
 *.coverage

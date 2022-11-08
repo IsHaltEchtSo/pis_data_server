@@ -38,7 +38,7 @@ loggerConfig(
             },
             "file": {
                 "class": "logging.FileHandler",
-                "filename": "logger.log",
+                "filename": "instance/logger.log",
                 "formatter": "default",
             },
         },

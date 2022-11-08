@@ -8,15 +8,15 @@ login_manager = LoginManager()
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache', "CACHE_DEFAULT_TIMEOUT": 300})
 
 def create_app(config_object=None):
-    app = MyFlask(__name__, )
+    app = MyFlask(__name__, instance_relative_config=True)
 
     
     # Load Dev Config if no config object is provided
     if not config_object:
         try:
-            from .local_config import DevelopmentConfig
+            from instance.private_config import DevelopmentConfig
         except ModuleNotFoundError:
-            from .config import DevelopmentConfig
+            from pis_app.config import DevelopmentConfig
             
         app.config.from_object(DevelopmentConfig)
     
