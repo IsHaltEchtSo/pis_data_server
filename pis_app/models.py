@@ -4,12 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from pis_app.database import Base
 from sqlalchemy import Table, Column, Integer, String, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
-import enum
-
-
-class RolesEnum(int, enum.Enum):
-    ADMIN = 0
-    USER = 1
+from pis_app.constants import RolesEnum
 
 
 class User(UserMixin, Base):

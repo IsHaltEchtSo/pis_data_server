@@ -38,7 +38,6 @@ def manual_view():
 # Route for 'Zettel Search' page
 @app.route('/zettel_search', methods=['POST', 'GET'])
 def zettel_search_view():
-    zettels = []
 
     form = ZettelSearchForm()
     if form.validate_on_submit():
@@ -51,9 +50,15 @@ def zettel_search_view():
             zettels = session.query(Zettel).filter(Zettel.title.contains(form.title.data))
         else:
             zettels = session.query(Zettel).all()
-        return render_template('views/zettel_search.html', context={'title': 'Zettel Search', 'zettels':zettels, 'form':form})
+        return render_template(
+            'views/zettel_search.html', 
+            context={'title': 'Zettel Search', 'zettels':zettels, 'form':form}
+        )
     
-    return render_template('views/zettel_search.html', context={'title': 'Zettel Search', 'zettels':[], 'form':form})
+    return render_template(
+        'views/zettel_search.html', 
+        context={'title': 'Zettel Search','form': form}
+    )
 
 
 # Route for 'Zettel' page
