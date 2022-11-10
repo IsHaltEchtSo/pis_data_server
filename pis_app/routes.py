@@ -46,14 +46,14 @@ def zettel_search_view():
     form = ZettelSearchForm()
     if form.validate_on_submit():
         session = app.get_db_session()
-        if form.luhmann_identifier.data and form.title.data:
+        if form.luhmann_id.data and form.title.data:
             zettels = session.query(Zettel) \
                                 .filter(
                                     Zettel.title.contains(form.title.data), 
-                                    Zettel.luhmann_identifier.contains(form.luhmann_identifier.data))
-        elif form.luhmann_identifier.data:
+                                    Zettel.luhmann_id.contains(form.luhmann_id.data))
+        elif form.luhmann_id.data:
             zettels = session.query(Zettel) \
-                                .filter(Zettel.luhmann_identifier.contains(form.luhmann_identifier.data))
+                                .filter(Zettel.luhmann_id.contains(form.luhmann_id.data))
         elif form.title.data:
             zettels = session.query(Zettel) \
                                 .filter(Zettel.title.contains(form.title.data))
@@ -76,7 +76,7 @@ def zettel_search_view():
 @app.route('/zettel/<string:luhmann_id>')
 def zettel_view(luhmann_id):
     session = app.get_db_session()
-    zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).one()
+    zettel = session.query(Zettel).filter(Zettel.luhmann_id == luhmann_id).one()
     if zettel:
         return render_template('views/zettel.html', 
                                 context={
@@ -90,7 +90,7 @@ def zettel_view(luhmann_id):
 @app.route('/zettel_edit/<string:luhmann_id>', methods=['POST', 'GET'])
 def zettel_edit_view(luhmann_id):
     session = app.get_db_session()
-    zettel = session.query(Zettel).filter(Zettel.luhmann_identifier == luhmann_id).scalar()
+    zettel = session.query(Zettel).filter(Zettel.luhmann_id == luhmann_id).scalar()
 
     if not zettel:
         abort(404)
@@ -103,7 +103,7 @@ def zettel_edit_view(luhmann_id):
         try:
             session.add(updated_zettel)
             session.commit()
-            return redirect(url_for('zettel_view', luhmann_id=updated_zettel.luhmann_identifier))
+            return redirect(url_for('zettel_view', luhmann_id=updated_zettel.luhmann_id))
         except IntegrityError:
             flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
             return redirect(url_for('zettel_edit_view', 
@@ -142,7 +142,7 @@ def label_zettel_view():
         try:
             session.add(zettel)
             session.commit()
-            return redirect(url_for('zettel_view', luhmann_id=zettel.luhmann_identifier))
+            return redirect(url_for('zettel_view', luhmann_id=zettel.luhmann_id))
         except IntegrityError:
             flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
             return redirect(url_for('label_zettel_view'))
@@ -194,10 +194,10 @@ def bottleneck_view():
 def delete_zettel(luhmann_id):
     session = app.get_db_session()
     zettel = session.query(Zettel) \
-                        .filter(Zettel.luhmann_identifier == luhmann_id).one()
+                        .filter(Zettel.luhmann_id == luhmann_id).one()
     if zettel:
         session.delete(zettel)
         session.commit()
-        flash(f"[{zettel.luhmann_identifier} {zettel.title}] was deleted")
+        flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
         return redirect(url_for('index_view'))
     abort(404)

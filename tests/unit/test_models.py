@@ -21,10 +21,10 @@ class TestZettel:
         """
         GIVEN a Zettel Model
         WHEN a Zettel object is being created
-        THEN check the 'luhmann_identifier', 'title', 'content' are correctly defined
+        THEN check the 'luhmann_id', 'title', 'content' are correctly defined
         """
-        zettel = Zettel(luhmann_identifier='1b', title='grey chair', content='there is a grey chair in front of me')
-        assert zettel.luhmann_identifier == '1b'
+        zettel = Zettel(luhmann_id='1b', title='grey chair', content='there is a grey chair in front of me')
+        assert zettel.luhmann_id == '1b'
         assert zettel.title == 'grey chair'
         assert zettel.content == 'there is a grey chair in front of me'
 
@@ -34,8 +34,8 @@ class TestZettel:
         WHEN a Zettel is linked to the other
         THEN check 'links' and 'backlinks' are properly populated
         """
-        zettel1 = Zettel(luhmann_identifier='1b', title='grey chair', content='there is a grey chair in front of me')
-        zettel2 = Zettel(luhmann_identifier='1', title='chairs', content='chairs come in different shapes and colors')
+        zettel1 = Zettel(luhmann_id='1b', title='grey chair', content='there is a grey chair in front of me')
+        zettel2 = Zettel(luhmann_id='1', title='chairs', content='chairs come in different shapes and colors')
 
         zettel1.add_outgoing_links([zettel2])
 

@@ -4,14 +4,14 @@
 
   <div>
 
-    <h1>Edit {{ context.zettel.luhmann_identifier}} {{context.zettel.title}}</h1>
+    <h1>Edit {{ context.zettel.luhmann_id}} {{context.zettel.title}}</h1>
 
-    <form method="POST" action="/zettel_edit/{{context.zettel.luhmann_identifier}}">
+    <form method="POST" action="/zettel_edit/{{context.zettel.luhmann_id}}">
       {{ context.form.csrf_token }}
 
       <fieldset>
-        {{ context.form.luhmann_identifier.label }}
-        {{ context.form.luhmann_identifier(placeholder=context.zettel.luhmann_identifier) }}
+        {{ context.form.luhmann_id.label }}
+        {{ context.form.luhmann_id(placeholder=context.zettel.luhmann_id) }}
       </fieldset>
 
       <fieldset>

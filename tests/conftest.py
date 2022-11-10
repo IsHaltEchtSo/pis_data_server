@@ -18,7 +18,7 @@ def user():
 
 @pytest.fixture(scope='module')
 def zettel():
-    zettel = Zettel(luhmann_identifier='1', title='Zettelkasten', content='')
+    zettel = Zettel(luhmann_id='1', title='Zettelkasten', content='')
     return zettel
 
 
@@ -60,8 +60,8 @@ def init_database(test_client, session):
     Base.metadata.create_all()
 
     # Populate the DB
-    zettel1 = Zettel(luhmann_identifier='1', title='Zettelkasten')
-    zettel2 = Zettel(luhmann_identifier='1a', title='Basic Usage')
+    zettel1 = Zettel(luhmann_id='1', title='Zettelkasten')
+    zettel2 = Zettel(luhmann_id='1a', title='Basic Usage')
 
     session.add_all([zettel1, zettel2])
     session.commit()

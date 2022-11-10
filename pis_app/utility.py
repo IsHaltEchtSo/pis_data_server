@@ -29,7 +29,7 @@ class ZettelFactory():
 
     def _zettel_instantiation(self) -> Zettel:
         zettel = Zettel(
-            luhmann_identifier = self.form.luhmann_identifier.data,
+            luhmann_id = self.form.luhmann_id.data,
             title = self.form.title.data,
             content = self.form.content.data
         )
@@ -37,8 +37,8 @@ class ZettelFactory():
 
 
     def _update_data(self, zettel: Zettel) -> None:
-        if self.form.luhmann_identifier.data:
-            zettel.luhmann_identifier = self.form.luhmann_identifier.data
+        if self.form.luhmann_id.data:
+            zettel.luhmann_id = self.form.luhmann_id.data
         if self.form.title.data:
             zettel.title = self.form.title.data
         if self.form.content.data:
@@ -52,7 +52,7 @@ class ZettelFactory():
             for link_id in link_ids:
                 link_zettel = self.db_session \
                     .query(Zettel) \
-                    .filter(Zettel.luhmann_identifier == link_id) \
+                    .filter(Zettel.luhmann_id == link_id) \
                     .scalar()
 
                 # link to the zettel if it already exists
@@ -60,7 +60,7 @@ class ZettelFactory():
                     zettel.links.append(link_zettel)
                 # otherwise, create a placeholder zettel for the link
                 else:
-                    link_zettel = Zettel(luhmann_identifier=link_id, title=f"Placeholder Title: <{uuid4()}>")
+                    link_zettel = Zettel(luhmann_id=link_id, title=f"Placeholder Title: <{uuid4()}>")
                     zettel.links.append(link_zettel)
 
 
@@ -72,7 +72,7 @@ class ZettelFactory():
             for backlink_id in backlink_ids:
                 backlink_zettel = self.db_session \
                     .query(Zettel) \
-                    .filter(Zettel.luhmann_identifier == backlink_id) \
+                    .filter(Zettel.luhmann_id == backlink_id) \
                     .scalar()
 
                 # backlink to the zettel if it already exists
@@ -80,5 +80,10 @@ class ZettelFactory():
                     zettel.backlinks.append(backlink_zettel)
                 # otherwise, create a placeholder zettel for the backlink
                 else: 
-                    backlink_zettel = Zettel(luhmann_identifier=backlink_id, title=f"Placeholder Title: <{uuid4()}>")
+                    backlink_zettel = Zettel(luhmann_id=backlink_id, title=f"Placeholder Title: <{uuid4()}>")
                     zettel.backlinks.append(backlink_zettel)
+
+
+
+class z:
+    pass

@@ -55,7 +55,7 @@ zettel_links_association = Table(
 class Zettel(Base):
     __tablename__ = 'zettels'
     id = Column(Integer, primary_key=True)
-    luhmann_identifier = Column(String, unique=True, nullable=False, index=True)
+    luhmann_id = Column(String, unique=True, nullable=False, index=True)
     title = Column(String, unique=True, nullable=False, index=True)
     content = Column(String, default="")
     links = relationship(
@@ -66,13 +66,13 @@ class Zettel(Base):
     )
     updates = relationship('ZettelUpdate', back_populates='zettel')
 
-    def __init__(self, luhmann_identifier: str, title: str, content: str = "") -> None:
-        self.luhmann_identifier = luhmann_identifier
+    def __init__(self, luhmann_id: str, title: str, content: str = "") -> None:
+        self.luhmann_id = luhmann_id
         self.title = title
         self.content = content
 
     def __repr__(self) -> str:
-        return f"<{self.luhmann_identifier}: {self.title}>"
+        return f"<{self.luhmann_id}: {self.title}>"
 
     def add_outgoing_links(self, links_list: list) -> None:
         self.links.extend(links_list)
