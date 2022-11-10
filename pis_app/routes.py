@@ -20,9 +20,8 @@ from .utility import ZettelFactory
 @app.route('/index')
 def index_view():
     return render_template('views/index.html', 
-                            context={
-                                'title': 'Index', 
-                                'RolesEnum': RolesEnum})
+                            context={'title': 'Index', 
+                                    'RolesEnum': RolesEnum})
 
 
 # Route for 'History' page
@@ -45,52 +44,39 @@ def zettel_search_view():
 
     form = ZettelSearchForm()
     if form.validate_on_submit():
-        session = app.get_db_session()
-        if form.luhmann_id.data and form.title.data:
-            zettels = session.query(Zettel) \
+        db_session = app.get_db_session()
+        zettels = db_session.query(Zettel) \
                                 .filter(
                                     Zettel.title.contains(form.title.data), 
                                     Zettel.luhmann_id.contains(form.luhmann_id.data))
-        elif form.luhmann_id.data:
-            zettels = session.query(Zettel) \
-                                .filter(Zettel.luhmann_id.contains(form.luhmann_id.data))
-        elif form.title.data:
-            zettels = session.query(Zettel) \
-                                .filter(Zettel.title.contains(form.title.data))
-        else:
-            zettels = session.query(Zettel) \
-                                .all()
         return render_template('views/zettel_search.html', 
-                                context={
-                                    'title': 'Zettel Search', 
-                                    'zettels':zettels, 
-                                    'form':form})
+                                context={'title': 'Zettel Search', 
+                                        'zettels':zettels, 
+                                        'form':form})
     
     return render_template('views/zettel_search.html', 
-                            context={
-                                'title': 'Zettel Search',
-                                'form': form})
+                            context={'title': 'Zettel Search',
+                                    'form': form})
 
 
 # Route for 'Zettel' page
 @app.route('/zettel/<string:luhmann_id>')
 def zettel_view(luhmann_id):
-    session = app.get_db_session()
-    zettel = session.query(Zettel).filter(Zettel.luhmann_id == luhmann_id).one()
+    db_session = app.get_db_session()
+    zettel = db_session.query(Zettel).filter(Zettel.luhmann_id == luhmann_id).one()
     if zettel:
         return render_template('views/zettel.html', 
-                                context={
-                                    'title': zettel.title, 
-                                    'zettel':zettel, 
-                                    'RolesEnum': RolesEnum})
+                                context={'title': zettel.title, 
+                                        'zettel':zettel, 
+                                        'RolesEnum': RolesEnum})
     abort(404)
 
 
 # Route for 'Zettel Edit' page
 @app.route('/zettel_edit/<string:luhmann_id>', methods=['POST', 'GET'])
 def zettel_edit_view(luhmann_id):
-    session = app.get_db_session()
-    zettel = session.query(Zettel).filter(Zettel.luhmann_id == luhmann_id).scalar()
+    db_session = app.get_db_session()
+    zettel = db_session.query(Zettel).filter(Zettel.luhmann_id == luhmann_id).scalar()
 
     if not zettel:
         abort(404)
@@ -98,11 +84,12 @@ def zettel_edit_view(luhmann_id):
     form = ZettelEditForm()
     if form.validate_on_submit():
 
-        updated_zettel = ZettelFactory(form=form, db_session=session).update_zettel(zettel=zettel)
+        updated_zettel = ZettelFactory(form=form, db_session=db_session) \
+                            .update_zettel(zettel=zettel)
 
         try:
-            session.add(updated_zettel)
-            session.commit()
+            db_session.add(updated_zettel)
+            db_session.commit()
             return redirect(url_for('zettel_view', luhmann_id=updated_zettel.luhmann_id))
         except IntegrityError:
             flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
@@ -110,10 +97,9 @@ def zettel_edit_view(luhmann_id):
                                     luhmann_id=luhmann_id))
 
     return render_template('views/zettel_edit.html', 
-                            context={
-                                'title': 'Zettel Edit', 
-                                'zettel':zettel, 
-                                'form':form})
+                            context={'title': 'Zettel Edit', 
+                                    'zettel':zettel, 
+                                    'form':form})
 
 
 # Route for 'Checklist' page
@@ -135,22 +121,21 @@ def digitalize_zettel_view():
 def label_zettel_view():
     form = DigitaliseZettelForm()
     if form.validate_on_submit():
-        session = app.get_db_session()
+        db_session = app.get_db_session()
 
-        zettel = ZettelFactory(form=form, db_session=session).create_zettel()
+        zettel = ZettelFactory(form=form, db_session=db_session).create_zettel()
 
         try:
-            session.add(zettel)
-            session.commit()
+            db_session.add(zettel)
+            db_session.commit()
             return redirect(url_for('zettel_view', luhmann_id=zettel.luhmann_id))
         except IntegrityError:
             flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
             return redirect(url_for('label_zettel_view'))
 
     return render_template('views/label_zettel.html', 
-                            context={
-                                'title': 'Label Zettel', 
-                                'form': form})
+                            context={'title': 'Label Zettel', 
+                                    'form': form})
 
 
 # Route for 'Success' page
@@ -165,13 +150,12 @@ def success_view():
 @login_required
 def admin_view():
     if current_user.role == RolesEnum.ADMIN.value:
-        session = app.get_db_session()
-        users = session.query(User).all()
+        db_session = app.get_db_session()
+        users = db_session.query(User).all()
         return render_template('views/admin.html', 
-                                context={
-                                    'title':'Admin Area', 
-                                    'RolesEnum': RolesEnum, 
-                                    'users':users})
+                                context={'title':'Admin Area', 
+                                        'RolesEnum': RolesEnum, 
+                                        'users':users})
     flash('You are not an admin!')
     return redirect(url_for('index_view'))
 
@@ -192,12 +176,12 @@ def bottleneck_view():
 @app.route('/delete/<string:luhmann_id>')
 @login_required
 def delete_zettel(luhmann_id):
-    session = app.get_db_session()
-    zettel = session.query(Zettel) \
+    db_session = app.get_db_session()
+    zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id).one()
     if zettel:
-        session.delete(zettel)
-        session.commit()
+        db_session.delete(zettel)
+        db_session.commit()
         flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
         return redirect(url_for('index_view'))
     abort(404)
