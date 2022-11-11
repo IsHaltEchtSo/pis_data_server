@@ -81,7 +81,8 @@ class ZettelFactory():
                     zettel.backlinks.append(backlink_zettel)
                 # otherwise, create a placeholder zettel for the backlink
                 else: 
-                    backlink_zettel = Zettel(luhmann_id=backlink_id, title=f"Placeholder Title: <{uuid4()}>")
+                    backlink_zettel = Zettel(luhmann_id=backlink_id, 
+                                            title=f"Placeholder Title: <{uuid4()}>")
                     zettel.backlinks.append(backlink_zettel)
 
 
@@ -110,3 +111,37 @@ class CacheProcessor:
         time.sleep(10)
         self.cache.set(keyword, 'Bottleneck Area')
         return self.cache.get(keyword)
+
+
+
+class DBSessionProcessor:
+    """Session Processor that helps with updating the zettels in the Database"""
+    def __init__(self, db_session: Session):
+        self.db_session = db_session
+
+    def delete_from_db(self, object):
+        self.db_session.delete(object)
+        self.db_session.commit()
+
+    def add_to_db(self, object):
+        self.db_session.add(object)
+        self.db_session.commit()
+        
+
+    def confirm_constraint_satisfaction(self, object: Zettel):
+        """"Check if no Zettel constraint was violated"""
+        title_duplicate         = self.db_session.query(Zettel) \
+                                                    .filter(Zettel.title == object.title,
+                                                            Zettel.id != object.id) \
+                                                    .scalar()
+        luhmann_id_duplicate    = self.db_session.query(Zettel) \
+                                                    .filter(Zettel.luhmann_id == object.luhmann_id,
+                                                            Zettel.id != object.id) \
+                                                    .scalar()
+        if title_duplicate or luhmann_id_duplicate:
+            return False
+        
+        return True
+
+
+    

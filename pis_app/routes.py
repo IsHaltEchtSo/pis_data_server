@@ -1,17 +1,15 @@
 """
 See 'rsc/Redirect_Backbone.png' for a diagram of the endpoints.
 """
-#TODO: CUD operations make a new Zettel Update
 from flask import render_template, current_app as app, redirect, flash, url_for, abort
 from flask_login import login_required, current_user
 from .models import User, Zettel
 from .constants import RolesEnum, FlashEnum
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import datetime as dt
-from sqlalchemy.exc import IntegrityError
 from .app import cache
 import pis_app.errorhandlers
-from .utility import ZettelFactory, CacheProcessor
+from .utility import ZettelFactory, CacheProcessor, DBSessionProcessor
 
 
 # Route for 'Home' page
@@ -75,20 +73,29 @@ def zettel_view(luhmann_id):
 @app.route('/zettel_edit/<string:luhmann_id>', methods=['POST', 'GET'])
 def zettel_edit_view(luhmann_id):
     db_session = app.get_db_session()
-    zettel = db_session.query(Zettel).filter(Zettel.luhmann_id == luhmann_id).scalar()
+    zettel = db_session.query(Zettel) \
+                        .filter(Zettel.luhmann_id == luhmann_id) \
+                        .scalar()
 
     if not zettel:
         abort(404)
     
     form = ZettelEditForm()
-    if form.validate_on_submit():
 
+    if form.validate_on_submit():
         updated_zettel = ZettelFactory(form=form, db_session=db_session) \
                             .update_zettel(zettel=zettel)
+        processor = DBSessionProcessor(db_session=db_session)
 
+        if not processor.confirm_constraint_satisfaction(object=updated_zettel):
             flash(FlashEnum.ZETTELDUPLICATE.value)
             return redirect(url_for('zettel_edit_view', 
                                     luhmann_id=luhmann_id))
+        
+        processor.add_to_db(updated_zettel)
+
+        return redirect(url_for('zettel_view', 
+                                luhmann_id=updated_zettel.luhmann_id))
 
     return render_template('views/zettel_edit.html', 
                             context={'title': 'Zettel Edit', 
@@ -117,10 +124,18 @@ def label_zettel_view():
     if form.validate_on_submit():
         db_session = app.get_db_session()
 
-        zettel = ZettelFactory(form=form, db_session=db_session).create_zettel()
+        zettel = ZettelFactory(form=form, db_session=db_session) \
+                    .create_zettel()
+        processor = DBSessionProcessor(db_session=db_session)
 
+        if not processor.confirm_constraint_satisfaction(object=zettel):
             flash(FlashEnum.ZETTELDUPLICATE.value)
             return redirect(url_for('label_zettel_view'))
+
+        processor.add_to_db(zettel)
+
+        return redirect(url_for('zettel_view', 
+                                luhmann_id=zettel.luhmann_id))
 
     return render_template('views/label_zettel.html', 
                             context={'title': 'Label Zettel', 
@@ -167,8 +182,8 @@ def delete_zettel(luhmann_id):
     zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id).one()
     if zettel:
-        db_session.delete(zettel)
-        db_session.commit()
+        DBSessionProcessor(db_session=db_session) \
+            .delete_from_db(zettel)
         flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
         return redirect(url_for('index_view'))
     abort(404)
