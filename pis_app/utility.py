@@ -49,19 +49,21 @@ class ZettelFactory():
         if self.form.links.data:
             if purge:
                 zettel.links.clear()
+
             link_ids = [link.strip() for link in self.form.links.data.split(',')]
             for link_id in link_ids:
                 link_zettel = self.db_session \
-                    .query(Zettel) \
-                    .filter(Zettel.luhmann_id == link_id) \
-                    .scalar()
+                                    .query(Zettel) \
+                                    .filter(Zettel.luhmann_id == link_id) \
+                                    .scalar()
 
                 # link to the zettel if it already exists
                 if link_zettel:
                     zettel.links.append(link_zettel)
                 # otherwise, create a placeholder zettel for the link
                 else:
-                    link_zettel = Zettel(luhmann_id=link_id, title=f"Placeholder Title: <{uuid4()}>")
+                    link_zettel = Zettel(luhmann_id=link_id, 
+                                        title=f"Placeholder Title: <{uuid4()}>")
                     zettel.links.append(link_zettel)
 
 
@@ -69,12 +71,14 @@ class ZettelFactory():
         if self.form.backlinks.data:
             if purge:
                 zettel.backlinks.clear()
+
             backlink_ids = [backlink.strip() for backlink in self.form.backlinks.data.split(',')]
+
             for backlink_id in backlink_ids:
                 backlink_zettel = self.db_session \
-                    .query(Zettel) \
-                    .filter(Zettel.luhmann_id == backlink_id) \
-                    .scalar()
+                                        .query(Zettel) \
+                                        .filter(Zettel.luhmann_id == backlink_id) \
+                                        .scalar()
 
                 # backlink to the zettel if it already exists
                 if backlink_zettel:
@@ -85,15 +89,6 @@ class ZettelFactory():
                                             title=f"Placeholder Title: <{uuid4()}>")
                     zettel.backlinks.append(backlink_zettel)
 
-
-
-# class FormQueryFactory():
-#     def __init__(self, db_session: Session, form: FlaskForm) -> None:
-#         self.db_session = db_session 
-#         self.form = form
-    
-#     def create_query(self, *args):
-#         pass
 
 class CacheProcessor:
     """Abstraction Layer for easy access to the Cache"""

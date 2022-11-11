@@ -36,16 +36,18 @@ def manual_view():
 
 
 # Route for 'Zettel Search' page
-@app.route('/zettel_search', methods=['POST', 'GET'])
+@app.route('/zettel_search', 
+            methods=['POST', 'GET'])
 def zettel_search_view():
-
     form = ZettelSearchForm()
+
     if form.validate_on_submit():
         db_session = app.get_db_session()
         zettels = db_session.query(Zettel) \
                                 .filter(
                                     Zettel.title.contains(form.title.data), 
                                     Zettel.luhmann_id.contains(form.luhmann_id.data))
+
         return render_template('views/zettel_search.html', 
                                 context={'title': 'Zettel Search', 
                                         'zettels':zettels, 
@@ -60,23 +62,25 @@ def zettel_search_view():
 @app.route('/zettel/<string:luhmann_id>')
 def zettel_view(luhmann_id):
     db_session = app.get_db_session()
-    zettel = db_session.query(Zettel).filter(Zettel.luhmann_id == luhmann_id).one()
-    if zettel:
-        return render_template('views/zettel.html', 
-                                context={'title': zettel.title, 
-                                        'zettel':zettel, 
-                                        'RolesEnum': RolesEnum})
-    abort(404)
+    zettel = db_session.query(Zettel) \
+                        .filter(Zettel.luhmann_id == luhmann_id).one() 
+    if not zettel:
+        abort(404)
+
+    return render_template('views/zettel.html', 
+                            context={'title': zettel.title, 
+                                    'zettel':zettel, 
+                                    'RolesEnum': RolesEnum})
 
 
 # Route for 'Zettel Edit' page
-@app.route('/zettel_edit/<string:luhmann_id>', methods=['POST', 'GET'])
+@app.route('/zettel_edit/<string:luhmann_id>', 
+            methods=['POST', 'GET'])
 def zettel_edit_view(luhmann_id):
     db_session = app.get_db_session()
     zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id) \
                         .scalar()
-
     if not zettel:
         abort(404)
     
@@ -118,12 +122,13 @@ def digitalize_zettel_view():
 
 
 # Route for 'Label Zettel' page
-@app.route('/label_zettel', methods=['POST', 'GET'])
+@app.route('/label_zettel', 
+            methods=['POST', 'GET'])
 def label_zettel_view():
     form = DigitaliseZettelForm()
+
     if form.validate_on_submit():
         db_session = app.get_db_session()
-
         zettel = ZettelFactory(form=form, db_session=db_session) \
                     .create_zettel()
         processor = DBSessionProcessor(db_session=db_session)
@@ -181,9 +186,10 @@ def delete_zettel(luhmann_id):
     db_session = app.get_db_session()
     zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id).one()
-    if zettel:
-        DBSessionProcessor(db_session=db_session) \
-            .delete_from_db(zettel)
-        flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
-        return redirect(url_for('index_view'))
-    abort(404)
+    if not zettel:
+        abort(404)
+    
+    DBSessionProcessor(db_session=db_session) \
+        .delete_from_db(zettel)
+    flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
+    return redirect(url_for('index_view'))
