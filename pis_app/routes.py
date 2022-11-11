@@ -9,6 +9,7 @@ from .constants import RolesEnum
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import datetime as dt
 from sqlalchemy.exc import IntegrityError
+from .app import cache
 import pis_app.errorhandlers
 from .utility import ZettelFactory, CacheProcessor
 

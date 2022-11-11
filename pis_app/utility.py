@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm
 from pis_app.models import Zettel
 from uuid import uuid4
 from sqlalchemy.orm import Session
-from .app import cache
 import time
 
 
@@ -105,8 +104,9 @@ class CacheProcessor:
         if cached_value:
             return cached_value
         else:
-            self.set(keyword=keyword)
+            return self.set(keyword=keyword)
 
-    def set(self, keyword) -> None:
+    def set(self, keyword) -> str:
         time.sleep(10)
         self.cache.set(keyword, 'Bottleneck Area')
+        return self.cache.get(keyword)
