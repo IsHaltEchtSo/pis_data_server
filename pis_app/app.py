@@ -1,22 +1,28 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_caching import Cache
-from .config import loggerConfig
 
 
 login_manager = LoginManager()
-cache = Cache(config={'CACHE_TYPE': 'SimpleCache', "CACHE_DEFAULT_TIMEOUT": 300})
+cache = Cache(config={  'CACHE_TYPE': 'SimpleCache', 
+                        'CACHE_DEFAULT_TIMEOUT': 300})
 
-def create_app(config_object=None):
-    app = Flask(__name__, )
+
+class MyFlask(Flask):
+    def get_db_session(self):
+        return self._DBSession()
+
+
+def create_app(config_object=None) -> MyFlask:
+    app = MyFlask(__name__, instance_relative_config=True)
 
     
     # Load Dev Config if no config object is provided
     if not config_object:
         try:
-            from .local_config import DevelopmentConfig
+            from instance.private_config import DevelopmentConfig
         except ModuleNotFoundError:
-            from .config import DevelopmentConfig
+            from pis_app.config import DevelopmentConfig
             
         app.config.from_object(DevelopmentConfig)
     
@@ -49,7 +55,7 @@ class AppInitializer:
         from pis_app.database import Session
         import pis_app.models
 
-        self.flask_app.Session = Session
+        self.flask_app._DBSession = Session
 
     def init_app_in_ctx(self) -> None:
         """

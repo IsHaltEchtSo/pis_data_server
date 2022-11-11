@@ -19,7 +19,7 @@ def login_view():
 
     form = LoginForm()
     if form.validate_on_submit():
-        session = app.Session()
+        session = app.get_db_session()
         user = session.query(User).filter_by(email=form.email.data).first()
         if user and user.check_password(password=form.password.data):
             login_user(user)
@@ -48,12 +48,12 @@ def signup_view():
     form = SignupForm()
     if form.validate_on_submit():
         # User sign up logic upon POST request
-        session = app.Session()
+        session = app.get_db_session()
         existing_user = session.query(User).filter_by(email=form.email.data).first()
         if existing_user is None:
             user = User(name=form.name.data, email=form.email.data)
             user.set_password(form.password.data)
-            session = app.Session()
+            session = app.get_db_session()
             session.add(user)
             session.commit()
             login_user(user)
@@ -80,7 +80,7 @@ def load_user(user_id):
     print(user_id)
     "Check if user is logged in on every page load"
     if user_id is not None:
-        session = app.Session()
+        session = app.get_db_session()
         return session.query(User).get(user_id)
     return None
 

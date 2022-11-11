@@ -36,12 +36,12 @@ loggerConfig(
                 "stream": "ext://sys.stdout",
                 "formatter": "short",
             },
-            "file": {
-                "class": "logging.FileHandler",
-                "filename": "logger.log",
-                "formatter": "default",
-            },
+            # "file": {
+            #     "class": "logging.FileHandler",
+            #     "filename": "instance/logger.log",
+            #     "formatter": "default",
+            # },
         },
-        "root": {"level": "INFO", "handlers": ["console", "file"]},
+        # "root": {"level": "INFO", "handlers": ["console", "file"]},
     }
 )

@@ -58,7 +58,7 @@ class LoginForm(FlaskForm):
 
 class ZettelSearchForm(FlaskForm):
     """ZettelSearch Form"""
-    luhmann_identifier = StringField(
+    luhmann_id = StringField(
         label='Luhmann ID',
     )
     title = StringField(
@@ -69,7 +69,7 @@ class ZettelSearchForm(FlaskForm):
 
 class ZettelEditForm(FlaskForm):
     """Form to edit Zettel"""
-    luhmann_identifier = StringField(
+    luhmann_id = StringField(
         label='Luhmann ID'
     )
     title = StringField(
@@ -89,7 +89,7 @@ class ZettelEditForm(FlaskForm):
 
 class DigitaliseZettelForm(FlaskForm):
     """Form to capture data for new Zettels"""
-    luhmann_identifier = StringField(
+    luhmann_id = StringField(
         label='Luhmann ID',
         validators=[
             DataRequired()

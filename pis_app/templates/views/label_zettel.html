@@ -8,9 +8,9 @@
     {{ context.form.csrf_token }}
 
     <fieldset>
-      {{ context.form.luhmann_identifier.label }}
-      {{ context.form.luhmann_identifier }}
-      {% for error in context.form.luhmann_identifier.errors %}
+      {{ context.form.luhmann_id.label }}
+      {{ context.form.luhmann_id }}
+      {% for error in context.form.luhmann_id.errors %}
         {{ error }}
       {% endfor %}
     </fieldset>

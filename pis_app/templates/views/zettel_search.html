@@ -10,8 +10,8 @@
       {{ context.form.csrf_token }}
 
       <fieldset>
-        {{ context.form.luhmann_identifier.label }}
-        {{ context.form.luhmann_identifier(placeholder='1a3d9b2') }}
+        {{ context.form.luhmann_id.label }}
+        {{ context.form.luhmann_id(placeholder='1a3d9b2') }}
       </fieldset>
 
       <fieldset>
@@ -26,7 +26,8 @@
     </form>
   </div>
 
-  {% for zettel in context.zettels|sort(attribute='luhmann_identifier') %}
-    <a href="{{ url_for('zettel_view', zettel_id=zettel.id) }}">{{ zettel.luhmann_identifier }}: {{ zettel.title }}</a> <br>
+  {% for zettel in context.zettels|sort(attribute='luhmann_id') %}
+    <a href="{{ url_for('zettel_view', luhmann_id=zettel.luhmann_id) }}">{{ zettel.luhmann_id }}: {{ zettel.title }}</a> <br>
   {% endfor %}
+  
 {% endblock content %}
