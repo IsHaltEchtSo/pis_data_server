@@ -13,3 +13,8 @@ NAMING_CONVENTION = {
 class RolesEnum(int, enum.Enum):
     ADMIN = 0
     USER = 1
+
+
+class FlashEnum(str, enum.Enum):
+  ZETTELDUPLICATE = "A Zettel with that Title and/or Luhmann ID already exists! Please try again!"
+  ADMIN_ERROR = 'You are not an admin!'

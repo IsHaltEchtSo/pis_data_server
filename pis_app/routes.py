@@ -5,7 +5,7 @@ See 'rsc/Redirect_Backbone.png' for a diagram of the endpoints.
 from flask import render_template, current_app as app, redirect, flash, url_for, abort
 from flask_login import login_required, current_user
 from .models import User, Zettel
-from .constants import RolesEnum
+from .constants import RolesEnum, FlashEnum
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import datetime as dt
 from sqlalchemy.exc import IntegrityError
@@ -86,12 +86,7 @@ def zettel_edit_view(luhmann_id):
         updated_zettel = ZettelFactory(form=form, db_session=db_session) \
                             .update_zettel(zettel=zettel)
 
-        try:
-            db_session.add(updated_zettel)
-            db_session.commit()
-            return redirect(url_for('zettel_view', luhmann_id=updated_zettel.luhmann_id))
-        except IntegrityError:
-            flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
+            flash(FlashEnum.ZETTELDUPLICATE.value)
             return redirect(url_for('zettel_edit_view', 
                                     luhmann_id=luhmann_id))
 
@@ -124,12 +119,7 @@ def label_zettel_view():
 
         zettel = ZettelFactory(form=form, db_session=db_session).create_zettel()
 
-        try:
-            db_session.add(zettel)
-            db_session.commit()
-            return redirect(url_for('zettel_view', luhmann_id=zettel.luhmann_id))
-        except IntegrityError:
-            flash("A Zettel with that Title and/or Luhmann ID already exists! Please try again!")
+            flash(FlashEnum.ZETTELDUPLICATE.value)
             return redirect(url_for('label_zettel_view'))
 
     return render_template('views/label_zettel.html', 
@@ -155,7 +145,7 @@ def admin_view():
                                 context={'title':'Admin Area', 
                                         'RolesEnum': RolesEnum, 
                                         'users':users})
-    flash('You are not an admin!')
+    flash(FlashEnum.ADMIN_ERROR.value)
     return redirect(url_for('index_view'))
 
 
