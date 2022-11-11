@@ -4,9 +4,16 @@ from flask_caching import Cache
 
 
 login_manager = LoginManager()
-cache = Cache(config={'CACHE_TYPE': 'SimpleCache', "CACHE_DEFAULT_TIMEOUT": 300})
+cache = Cache(config={  'CACHE_TYPE': 'SimpleCache', 
+                        'CACHE_DEFAULT_TIMEOUT': 300})
 
-def create_app(config_object=None):
+
+class MyFlask(Flask):
+    def get_db_session(self):
+        return self._DBSession()
+
+
+def create_app(config_object=None) -> MyFlask:
     app = MyFlask(__name__, instance_relative_config=True)
 
     
@@ -67,9 +74,3 @@ class AppInitializer:
 
         with self.flask_app.app_context():
             self.init_app_in_ctx()
-
-
-class MyFlask(Flask):
-    def get_db_session(self):
-        return self._DBSession()
-

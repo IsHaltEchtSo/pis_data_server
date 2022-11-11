@@ -6,13 +6,11 @@ from flask import render_template, current_app as app, redirect, flash, url_for,
 from flask_login import login_required, current_user
 from .models import User, Zettel
 from .constants import RolesEnum
-from .app import cache
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
-import time
 import datetime as dt
 from sqlalchemy.exc import IntegrityError
 import pis_app.errorhandlers
-from .utility import ZettelFactory
+from .utility import ZettelFactory, CacheProcessor
 
 
 # Route for 'Home' page
@@ -164,10 +162,8 @@ def admin_view():
 # @cache.cached()  # caches the WHOLE view
 def bottleneck_view():
     app.logger.info(f'Time upon request: {dt.datetime.now()}')
-    title = cache.get('title')
-    if title is None:
-        time.sleep(10)
-        cache.set('title', 'Bottleneck Area')
+    title = CacheProcessor(cache=cache) \
+                .get(keyword='title')
     app.logger.info(f'Time upon response: {dt.datetime.now()}')
     return render_template('views/bottleneck.html', 
                             context={'title':title})

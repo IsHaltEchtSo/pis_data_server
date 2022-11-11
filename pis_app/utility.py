@@ -2,6 +2,8 @@ from flask_wtf import FlaskForm
 from pis_app.models import Zettel
 from uuid import uuid4
 from sqlalchemy.orm import Session
+from .app import cache
+import time
 
 
 class ZettelFactory():
@@ -85,5 +87,26 @@ class ZettelFactory():
 
 
 
-class z:
-    pass
+# class FormQueryFactory():
+#     def __init__(self, db_session: Session, form: FlaskForm) -> None:
+#         self.db_session = db_session 
+#         self.form = form
+    
+#     def create_query(self, *args):
+#         pass
+
+class CacheProcessor:
+    """Abstraction Layer for easy access to the Cache"""
+    def __init__(self, cache) -> None:
+        self.cache = cache
+
+    def get(self, keyword) -> str:
+        cached_value = self.cache.get(keyword)
+        if cached_value:
+            return cached_value
+        else:
+            self.set(keyword=keyword)
+
+    def set(self, keyword) -> None:
+        time.sleep(10)
+        self.cache.set(keyword, 'Bottleneck Area')
