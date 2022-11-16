@@ -42,3 +42,7 @@ cd pis_app
 alembic upgrade head
 sh run.sh
 ```
+
+## Architecture
+
+<img src="pis_app/static/assets/PIS Techstack.png" width="100%">  
