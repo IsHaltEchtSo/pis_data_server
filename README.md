@@ -4,7 +4,8 @@
 
 [**What**](#the-zettelkasten-method) |
 [**Why**](#the-zettelkasten-hybrid) |
-[**How**](#pis-and-zk) 
+[**How**](#pis-and-zk) |
+[**Setup**](#setup) 
 
 ## The Zettelkasten Method
 
@@ -18,3 +19,26 @@ While working analoguely gives you huge benefits in terms of creativity, freedom
 
 The PIS and ZK roughly translate to a backend/frontend relationship: while the PIS is concerned with storing the zettel on a server and making them easy to retrieve, the ZK's task is to display them nicely and easying the task of organising them to (re)build something.  
 To use the PIS, simply upload your hand-written zettel and name them - that's it! Now you're able to use the ZK and it's visualisation tools to work with your accumulated knowledge.
+
+## SETUP
+
+```
+git clone https://github.com/IsHaltEchtSo/pis_data_server.git
+
+cd pis_data_server
+
+python -m venv venv && . venv/bin/activate
+
+pip install -r requirements.txt
+
+mkdir instance && cp pis_app/config.py instance/private_config.py
+```
+### Database Migration
+- Uncomment and update the settings in instance/private_config.py to connect to your database
+
+- Change sqlalchemy.url value under pis_app/alembic.ini to connect to your database
+``` 
+cd pis_app 
+alembic upgrade head
+sh run.sh
+```
