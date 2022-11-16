@@ -7,7 +7,8 @@
 [**How**](#pis-and-zk) |
 [**Setup**](#setup) |
 [**Architecture**](#architecture) |
-[**Endpoints**](#endpoints) 
+[**Endpoints**](#endpoints) |
+[**Tools**](#tools-used)
 
 ## The Zettelkasten Method
 
@@ -116,3 +117,11 @@ GET: cached performance bottleneck
 /delete/<string:luhmann_id>
 ```
 GET: deletes the zettel
+
+## Tools used
+
+Zsh to browse and interact with the UNIX system  
+Chrome Inspector to manitor network traffic, tokens, html/css/js of website
+VSC to write, run, debug and commit code  
+Git to version control  
+Datagrip to validate and interact with the database
