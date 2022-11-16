@@ -1,5 +1,5 @@
-from flask import current_app as app, render_template, request, redirect, flash, session, url_for
-from flask_login import login_required, logout_user, current_user, login_user
+from flask import current_app as app, render_template, redirect, flash, url_for
+from flask_login import logout_user, current_user, login_user
 from .forms import SignupForm, LoginForm
 from .models import User
 from .app import login_manager
