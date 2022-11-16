@@ -81,7 +81,8 @@ def zettel_edit_view(luhmann_id):
     zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id) \
                         .scalar()
-    if not zettel:
+                        
+    if not zettel or not (current_user.role == RolesEnum.ADMIN.value):
         abort(404)
     
     form = ZettelEditForm()
@@ -186,7 +187,8 @@ def delete_zettel(luhmann_id):
     db_session = app.get_db_session()
     zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id).one()
-    if not zettel:
+
+    if not zettel or not (current_user.role == RolesEnum.ADMIN.value):
         abort(404)
     
     DBSessionProcessor(db_session=db_session) \

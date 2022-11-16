@@ -5,7 +5,9 @@
 [**What**](#the-zettelkasten-method) |
 [**Why**](#the-zettelkasten-hybrid) |
 [**How**](#pis-and-zk) |
-[**Setup**](#setup) 
+[**Setup**](#setup) |
+[**Architecture**](#architecture) |
+[**Endpoints**](#endpoints) 
 
 ## The Zettelkasten Method
 
@@ -46,3 +48,71 @@ sh run.sh
 ## Architecture
 
 <img src="pis_app/static/assets/PIS Techstack.png" width="100%">  
+
+## Endpoints
+
+```
+/login
+```
+GET: shows form to log in
+POST: submits data to log in 
+
+```
+/signup
+```
+GET: shows form to sign up
+POST: submits data to sign up
+
+```
+/logout
+```
+GET: logs out the current user
+
+```
+/
+/index
+```
+GET: landing page
+
+```
+/zettel_search
+```
+GET: shows search bar for zettel
+POST: submits data to retrieve zettel
+
+```
+/zettel/<string:luhmann_id>
+```
+GET: displays the zettel
+
+```
+/zettel_edit/<string:luhmann_id>
+```
+GET: displays form to enter new data
+POST: submits data to edit the zettel
+
+```
+/digitalize_zettel
+```
+GET: displays link to create a new zettel
+
+```
+/label_zettel
+```
+GET: displays form to enter data for new zettel
+POST: submits data and creates a new zettel
+
+```
+/admin
+```
+GET: displays all user and relevant data
+
+```
+/bottleneck
+```
+GET: cached performance bottleneck    
+```
+
+/delete/<string:luhmann_id>
+```
+GET: deletes the zettel
