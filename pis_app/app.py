@@ -13,21 +13,8 @@ class MyFlask(Flask):
         return self._DBSession()
 
 
-def create_app(config_object=None) -> MyFlask:
+def create_app() -> MyFlask:
     app = MyFlask(__name__, instance_relative_config=True)
-
-    
-    # Load Dev Config if no config object is provided
-    if not config_object:
-        try:
-            from instance.private_config import DevelopmentConfig
-        except ModuleNotFoundError:
-            from pis_app.config import DevelopmentConfig
-            
-        app.config.from_object(DevelopmentConfig)
-    
-    else:
-        app.config.from_object(config_object)
 
     app_initializer = AppInitializer(app=app)
     app_initializer.init_app()
@@ -38,7 +25,7 @@ def create_app(config_object=None) -> MyFlask:
 class AppInitializer:
     def __init__(self, app: Flask) -> None:
         self.flask_app = app
-        self.config = app.config
+
 
     def init_views(self) -> None:
         """
@@ -47,6 +34,7 @@ class AppInitializer:
         """
         import pis_app.routes
         import pis_app.auth
+
 
     def init_database(self) -> None:
         """
@@ -57,6 +45,7 @@ class AppInitializer:
 
         self.flask_app._DBSession = Session
 
+
     def init_app_in_ctx(self) -> None:
         """
         Delegate to methods that need the app context to init the app.
@@ -65,10 +54,22 @@ class AppInitializer:
         self.init_views()
 
 
+    def configure_app(self) -> None:
+        # Load Dev Config if no config object is provided
+        try:
+            from instance.private_config import DevelopmentConfig
+        except ModuleNotFoundError:
+            from pis_app.config import DevelopmentConfig
+        
+        self.flask_app.config.from_object(DevelopmentConfig)
+
+
     def init_app(self) -> None:
         """
         Main method that delegates to other methods to fully initialize the app.
         """
+        self.configure_app()
+
         login_manager.init_app(self.flask_app)
         cache.init_app(self.flask_app)
 
