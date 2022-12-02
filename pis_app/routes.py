@@ -3,7 +3,7 @@ See 'rsc/Redirect_Backbone.png' for a diagram of the endpoints.
 """
 from flask import render_template, current_app as app, redirect, flash, url_for, abort
 from flask_login import login_required, current_user
-from .models import User, Zettel
+from .models import User, Zettel, Task
 from .constants import RolesEnum, FlashEnum
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import datetime as dt
@@ -195,3 +195,13 @@ def delete_zettel(luhmann_id):
         .delete_from_db(zettel)
     flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
     return redirect(url_for('index_view'))
+
+
+@app.route('/todoist-clone')
+def todoist_clone_view():
+    session = app.get_db_session()
+    daily_tasks = session.query(Task) \
+                            # .filter(Task.daily == True) \.all()
+    return render_template('views/todoist-clone.html',
+                            context={'title':'Todoist Clone',
+                                     'daily_tasks': daily_tasks })

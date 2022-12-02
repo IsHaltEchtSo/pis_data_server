@@ -78,6 +78,13 @@ class Zettel(Base):
         self.links.extend(links_list)
 
 
+class Task(Base):
+    __tablename__ = 'tasks'
+    id = Column(Integer, primary_key=True)
+    task_name = Column(String, nullable=False)
+    daily = Column(Boolean, default=True)
+
+
 class ZettelUpdate(Base):
     __tablename__ = 'zettel_updates'
     id = Column(Integer, primary_key=True)
