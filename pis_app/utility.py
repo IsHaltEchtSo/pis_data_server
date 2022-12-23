@@ -108,7 +108,6 @@ class CacheProcessor:
         return self.cache.get(keyword)
 
 
-
 class DBSessionProcessor:
     """Session Processor that helps with updating the zettels in the Database"""
     def __init__(self, db_session: Session):
@@ -137,6 +136,3 @@ class DBSessionProcessor:
             return False
         
         return True
-
-
-    

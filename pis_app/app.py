@@ -14,7 +14,9 @@ class MyFlask(Flask):
 
 
 def create_app() -> MyFlask:
-    app = MyFlask(__name__, instance_relative_config=True)
+    app = MyFlask(  __name__, 
+                    instance_relative_config=True, 
+                    template_folder='templates')
 
     app_initializer = AppInitializer(app=app)
     app_initializer.init_app()
@@ -34,6 +36,9 @@ class AppInitializer:
         """
         import pis_app.routes
         import pis_app.auth
+
+        from .gtd import gtd_bp
+        self.flask_app.register_blueprint(gtd_bp)
 
 
     def init_database(self) -> None:
