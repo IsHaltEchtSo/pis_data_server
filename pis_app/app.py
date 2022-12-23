@@ -14,7 +14,9 @@ class MyFlask(Flask):
 
 
 def create_app() -> MyFlask:
-    app = MyFlask(__name__, instance_relative_config=True, template_folder='templates')
+    app = MyFlask(  __name__, 
+                    instance_relative_config=True, 
+                    template_folder='templates')
 
     app_initializer = AppInitializer(app=app)
     app_initializer.init_app()

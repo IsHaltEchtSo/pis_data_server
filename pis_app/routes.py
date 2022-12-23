@@ -1,15 +1,17 @@
 """
-See 'rsc/Redirect_Backbone.png' for a diagram of the endpoints.
+See 'rsc/Redirect_Backbone.png' 
+for a diagram of the endpoints.
 """
+from .app import cache
+from .constants import RolesEnum, FlashEnum
+from .errorhandlers import *
+from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
+from .models import User, Zettel
+from .utility import ZettelFactory, CacheProcessor, DBSessionProcessor
+
+import datetime as dt
 from flask import render_template, current_app as app, redirect, flash, url_for, abort
 from flask_login import login_required, current_user
-from .models import User, Zettel, Task
-from .constants import RolesEnum, FlashEnum
-from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
-import datetime as dt
-from .app import cache
-import pis_app.errorhandlers
-from .utility import ZettelFactory, CacheProcessor, DBSessionProcessor
 
 
 # Route for 'Home' page
@@ -171,7 +173,6 @@ def admin_view():
 
 
 @app.route('/bottleneck')
-# @cache.cached()  # caches the WHOLE view
 def bottleneck_view():
     app.logger.info(f'Time upon request: {dt.datetime.now()}')
     title = CacheProcessor(cache=cache) \
