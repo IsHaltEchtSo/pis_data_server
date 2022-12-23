@@ -195,13 +195,3 @@ def delete_zettel(luhmann_id):
         .delete_from_db(zettel)
     flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
     return redirect(url_for('index_view'))
-
-
-@app.route('/todoist-clone')
-def todoist_clone_view():
-    session = app.get_db_session()
-    daily_tasks = session.query(Task) \
-                            # .filter(Task.daily == True) \.all()
-    return render_template('views/todoist-clone.html',
-                            context={'title':'Todoist Clone',
-                                     'daily_tasks': daily_tasks })
