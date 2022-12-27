@@ -1,4 +1,7 @@
-from pis_app.models import Base, Column, Integer, String, Boolean
+from pis_app.database import Base
+
+from sqlalchemy import Column, Integer, String, Boolean
+
 
 
 class Task(Base):

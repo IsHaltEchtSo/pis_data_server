@@ -1,11 +1,11 @@
-from .models import Zettel
 from .forms import ZettelEditForm, ZettelSearchForm, ZettelCreateForm
+from .models import Zettel
 from .utility import ZettelFactory, DBSessionProcessor
+
 from pis_app.constants import RolesEnum, FlashEnum
 
 from flask import Blueprint, current_app as app, render_template, abort, flash, redirect, url_for
 from flask_login import current_user, login_required
-
 
 
 
@@ -126,4 +126,4 @@ def zettel_delete(luhmann_id):
     DBSessionProcessor(db_session=db_session) \
         .delete_from_db(zettel)
     flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
-    return redirect(url_for('index'))
+    return redirect(url_for('main_bp.index'))
