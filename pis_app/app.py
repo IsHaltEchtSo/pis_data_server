@@ -31,8 +31,8 @@ class AppInitializer:
         Initialize the views using local imports after instantiating an app.
         This is called within the app context to avoid the app context error.
         """
-        import pis_app.routes
-        import pis_app.auth
+        from .main import main_bp
+        self.flask_app.register_blueprint(main_bp)
 
         from .auth import auth_bp
         self.flask_app.register_blueprint(auth_bp)

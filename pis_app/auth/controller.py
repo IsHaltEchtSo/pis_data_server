@@ -34,7 +34,7 @@ def signup():
             session.add(user)
             session.commit()
             login_user(user)
-            return redirect(url_for('index'))
+            return redirect(url_for('main_bp.index'))
 
         flash('A User with that email adress already exists!')
 
@@ -55,7 +55,7 @@ def login():
     """
     # Bypass if user is logged in
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main_bp.index'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -67,7 +67,7 @@ def login():
         if user and user.check_password(password=form.password.data):
             login_user(user)
             user.set_last_login()
-            return redirect(url_for('index'))
+            return redirect(url_for('main_bp.index'))
         flash('Invalid usernamed/password combination')
         return redirect(url_for('auth_bp.login'))
     
@@ -81,4 +81,4 @@ def login():
 @auth_bp.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('main_bp.index'))

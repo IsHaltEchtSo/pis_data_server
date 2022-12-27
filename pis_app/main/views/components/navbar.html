@@ -1,5 +1,5 @@
 <nav>
-  <a href="{{ url_for('index') }}">PIS/ </a>
+  <a href="{{ url_for('main_bp.index') }}">PIS/ </a>
   <span>{{ context.title }}</span>
   <div class="right-bar">
     {% if current_user.is_authenticated %}
