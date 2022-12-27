@@ -1,11 +1,11 @@
 <nav>
-  <a href="{{ url_for('index_view') }}">PIS/ </a>
+  <a href="{{ url_for('index') }}">PIS/ </a>
   <span>{{ context.title }}</span>
   <div class="right-bar">
     {% if current_user.is_authenticated %}
-      <a href="{{ url_for('auth_bp.logout_view')}}">Log Out</a>
+      <a href="{{ url_for('auth_bp.logout')}}">Log Out</a>
     {% else %}
-      <a href="{{ url_for('auth_bp.login_view')}}">Log In</a>
+      <a href="{{ url_for('auth_bp.login')}}">Log In</a>
     {% endif %}
   </div>
 </nav>

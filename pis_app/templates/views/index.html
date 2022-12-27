@@ -3,15 +3,11 @@
 
 {% block content %}
 
-  <a href="{{ url_for('digitalize_zettel_view') }}">  Digitalize</a> <br>
-  <a href="{{ url_for('zettel_search_view') }}">  Search</a> <br>
-  <!-- <a href="{{ url_for('checklist_view') }}">  Modifications Checklist</a> <br> -->
-  <!-- <a href="{{ url_for('history_view') }}">  History</a> <br> -->
-  <!-- <a href="{{ url_for('manual_view') }}">  Manual</a> <br> -->
-  <a href="{{ url_for('bottleneck_view') }}">  Bottleneck Query</a> <br>
+  <a href="{{ url_for('zk_bp.zettel_create') }}">  Digitalize</a> <br>
+  <a href="{{ url_for('zk_bp.zettel_search') }}">  Search</a> <br>
 
   {% if current_user.role == context.RolesEnum.ADMIN.value %}
-    <a href="{{ url_for('admin_view') }}">  Admin Area</a> <br>
+    <a href="{{ url_for('admin') }}">  Admin Area</a> <br>
   {% endif %}
 
 {% endblock content %}

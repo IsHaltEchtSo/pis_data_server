@@ -38,13 +38,15 @@ class AppInitializer:
         from .auth import auth_bp
         self.flask_app.register_blueprint(auth_bp)
 
+        from .zettelkasten import zk_bp
+        self.flask_app.register_blueprint(zk_bp)
+
 
     def init_database(self) -> None:
         """
         Initialize the database and locally import the models in app context
         """
         from pis_app.database import Session
-        import pis_app.models
 
         self.flask_app._DBSession = Session
 

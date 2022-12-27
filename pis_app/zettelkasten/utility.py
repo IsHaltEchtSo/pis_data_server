@@ -1,17 +1,16 @@
+from .models import Zettel
+
 from flask_wtf import FlaskForm
-from pis_app.models import Zettel
-from uuid import uuid4
 from sqlalchemy.orm import Session
-import time
+from uuid import uuid4
+
 
 
 class ZettelFactory():
     """Instantiates Zettel objects using the 'create_zettel' method"""
-
     def __init__(self, form: FlaskForm, db_session: Session):
         self.form = form
         self.db_session = db_session
-
 
     def create_zettel(self) -> Zettel:
         zettel = self._zettel_instantiation()
@@ -20,13 +19,11 @@ class ZettelFactory():
 
         return zettel
 
-
     def update_zettel(self, zettel: Zettel) -> Zettel:
         self._update_data(zettel)
         self._update_links(zettel, purge=True)
         self._update_backlinks(zettel, purge=True)
         return zettel
-
 
     def _zettel_instantiation(self) -> Zettel:
         zettel = Zettel(
@@ -35,7 +32,6 @@ class ZettelFactory():
             content = self.form.content.data
         )
         return zettel
-
 
     def _update_data(self, zettel: Zettel) -> None:
         if self.form.luhmann_id.data:
@@ -66,7 +62,6 @@ class ZettelFactory():
                                         title=f"Placeholder Title: <{uuid4()}>")
                     zettel.links.append(link_zettel)
 
-
     def _update_backlinks(self, zettel: Zettel, purge=False) -> None:
         if self.form.backlinks.data:
             if purge:
@@ -90,25 +85,6 @@ class ZettelFactory():
                     zettel.backlinks.append(backlink_zettel)
 
 
-class CacheProcessor:
-    """Abstraction Layer for easy access to the Cache"""
-    def __init__(self, cache) -> None:
-        self.cache = cache
-
-    def get(self, keyword) -> str:
-        cached_value = self.cache.get(keyword)
-        if cached_value:
-            return cached_value
-        else:
-            return self.set(keyword=keyword)
-
-    def set(self, keyword) -> str:
-        time.sleep(10)
-        self.cache.set(keyword, 'Bottleneck Area')
-        return self.cache.get(keyword)
-
-
-
 class DBSessionProcessor:
     """Session Processor that helps with updating the zettels in the Database"""
     def __init__(self, db_session: Session):
@@ -122,7 +98,6 @@ class DBSessionProcessor:
         self.db_session.add(object)
         self.db_session.commit()
         
-
     def confirm_constraint_satisfaction(self, object: Zettel):
         """"Check if no Zettel constraint was violated"""
         title_duplicate         = self.db_session.query(Zettel) \
@@ -137,6 +112,3 @@ class DBSessionProcessor:
             return False
         
         return True
-
-
-    
