@@ -40,6 +40,9 @@ class AppInitializer:
         from .zettelkasten import zk_bp
         self.flask_app.register_blueprint(zk_bp)
 
+        from .admin import admin_bp
+        self.flask_app.register_blueprint(admin_bp)
+
 
     def init_database(self) -> None:
         """
