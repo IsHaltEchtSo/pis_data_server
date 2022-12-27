@@ -1,10 +1,7 @@
 from pis_app.database import Base
 
-from flask_wtf import FlaskForm
 from sqlalchemy import Column, Integer, String, Table, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
-from wtforms import StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired
 
 
 
@@ -51,49 +48,6 @@ class Zettel(Base):
 
     def add_outgoing_links(self, links_list: list) -> None:
         self.links.extend(links_list)
-
-
-class ZettelSearchForm(FlaskForm):
-    """ZettelSearch Form"""
-    luhmann_id  = StringField(  label='Luhmann ID',)
-
-    title       = StringField(  label='Title')
-
-    submit      = SubmitField(  label='Search')
-
-
-class ZettelEditForm(FlaskForm):
-    """Form to edit Zettel"""
-    luhmann_id  = StringField(  label='Luhmann ID')
-
-    title       = StringField(  label='Title')
-
-    links       = StringField(  label="Links")
-
-    backlinks   = StringField(  label="Backlinks")
-
-    content     = TextAreaField(    label='Content')
-
-    submit      = SubmitField(  label='Save')
-
-
-class DigitaliseZettelForm(FlaskForm):
-    """Form to capture data for new Zettels"""
-    luhmann_id  = StringField(  label='Luhmann ID',
-                                validators=[
-                                    DataRequired()])
-
-    title       = StringField(  label='Title',
-                                validators=[
-                                    DataRequired()])
-
-    links       = StringField(  label='Links')
-
-    backlinks   = StringField(  label='Backlinks')
-
-    content     = TextAreaField(    label='Content')
-                    
-    submit      = SubmitField(  label='Save')
 
 
 class ZettelUpdate(Base):

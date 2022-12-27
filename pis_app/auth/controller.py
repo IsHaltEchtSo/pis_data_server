@@ -1,4 +1,5 @@
-from .models import LoginForm, SignupForm, User
+from .models import User
+from .forms import LoginForm, SignupForm
 from .utility import *
 from flask import Blueprint, redirect, url_for, current_app as app, flash, render_template
 from flask_login import current_user, logout_user, login_user, LoginManager

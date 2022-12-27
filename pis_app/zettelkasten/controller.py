@@ -1,4 +1,5 @@
-from .models import Zettel, ZettelSearchForm, DigitaliseZettelForm, ZettelEditForm
+from .models import Zettel
+from .forms import ZettelEditForm, ZettelSearchForm, ZettelCreateForm
 from .utility import ZettelFactory, DBSessionProcessor
 from pis_app.constants import RolesEnum, FlashEnum
 
@@ -55,7 +56,7 @@ def zettel_search():
 @zk_bp.route('/zettel-create', 
             methods=['POST', 'GET'])
 def zettel_create():
-    form = DigitaliseZettelForm()
+    form = ZettelCreateForm()
 
     if form.validate_on_submit():
         db_session = app.get_db_session()
