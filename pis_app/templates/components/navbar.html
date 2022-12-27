@@ -3,9 +3,9 @@
   <span>{{ context.title }}</span>
   <div class="right-bar">
     {% if current_user.is_authenticated %}
-      <a href="{{ url_for('logout_view')}}">Log Out</a>
+      <a href="{{ url_for('auth_bp.logout_view')}}">Log Out</a>
     {% else %}
-      <a href="{{ url_for('login_view')}}">Log In</a>
+      <a href="{{ url_for('auth_bp.login_view')}}">Log In</a>
     {% endif %}
   </div>
 </nav>

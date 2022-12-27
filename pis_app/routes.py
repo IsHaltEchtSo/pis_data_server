@@ -3,7 +3,8 @@ See 'rsc/Redirect_Backbone.png' for a diagram of the endpoints.
 """
 from flask import render_template, current_app as app, redirect, flash, url_for, abort
 from flask_login import login_required, current_user
-from .models import User, Zettel
+from .models import Zettel
+from .auth.models import User
 from .constants import RolesEnum, FlashEnum
 from .forms import ZettelSearchForm, ZettelEditForm, DigitaliseZettelForm
 import datetime as dt
@@ -18,21 +19,21 @@ from .utility import ZettelFactory, CacheProcessor, DBSessionProcessor
 def index_view():
     return render_template('views/index.html', 
                             context={'title': 'Index', 
-                                    'RolesEnum': RolesEnum})
+                                     'RolesEnum': RolesEnum})
 
 
 # Route for 'History' page
 @app.route('/history')
 def history_view():
     return render_template('views/history.html', 
-                            context={'title': 'History'})
+                            context={'title': 'History',})
 
 
 # Route for 'Manual' page
 @app.route('/manual')
 def manual_view():
     return render_template('views/manual.html', 
-                            context={'title': 'Manual'})
+                            context={'title': 'Manual',})
 
 
 # Route for 'Zettel Search' page
@@ -50,12 +51,12 @@ def zettel_search_view():
 
         return render_template('views/zettel_search.html', 
                                 context={'title': 'Zettel Search', 
-                                        'zettels':zettels, 
-                                        'form':form})
+                                         'zettels':zettels, 
+                                         'form':form})
     
     return render_template('views/zettel_search.html', 
                             context={'title': 'Zettel Search',
-                                    'form': form})
+                                     'form': form})
 
 
 # Route for 'Zettel' page
@@ -69,8 +70,8 @@ def zettel_view(luhmann_id):
 
     return render_template('views/zettel.html', 
                             context={'title': zettel.title, 
-                                    'zettel':zettel, 
-                                    'RolesEnum': RolesEnum})
+                                     'zettel':zettel, 
+                                     'RolesEnum': RolesEnum})
 
 
 # Route for 'Zettel Edit' page
@@ -104,22 +105,22 @@ def zettel_edit_view(luhmann_id):
 
     return render_template('views/zettel_edit.html', 
                             context={'title': 'Zettel Edit', 
-                                    'zettel':zettel, 
-                                    'form':form})
+                                     'zettel':zettel, 
+                                     'form':form})
 
 
 # Route for 'Checklist' page
 @app.route('/checklist')
 def checklist_view():
     return render_template('views/checklist.html', 
-                            context={'title': 'Checklist'})
+                            context={'title': 'Checklist',})
 
 
 # Route for 'Digitalize Zettel' page
 @app.route('/digitalize_zettel')
 def digitalize_zettel_view():
     return render_template('views/digitalize_zettel.html', 
-                            context={'title': 'Digitalize Zettel'})
+                            context={'title': 'Digitalize Zettel',})
 
 
 # Route for 'Label Zettel' page
@@ -145,7 +146,7 @@ def label_zettel_view():
 
     return render_template('views/label_zettel.html', 
                             context={'title': 'Label Zettel', 
-                                    'form': form})
+                                     'form': form})
 
 
 # Route for 'Success' page
@@ -164,8 +165,9 @@ def admin_view():
         users = db_session.query(User).all()
         return render_template('views/admin.html', 
                                 context={'title':'Admin Area', 
-                                        'RolesEnum': RolesEnum, 
-                                        'users':users})
+                                         'RolesEnum': RolesEnum, 
+                                         'users':users,
+                                         'user': current_user,})
     flash(FlashEnum.ADMIN_ERROR.value)
     return redirect(url_for('index_view'))
 
@@ -178,7 +180,8 @@ def bottleneck_view():
                 .get(keyword='title')
     app.logger.info(f'Time upon response: {dt.datetime.now()}')
     return render_template('views/bottleneck.html', 
-                            context={'title':title})
+                            context={'title':title,
+                                     'user': current_user,})
 
 
 @app.route('/delete/<string:luhmann_id>')

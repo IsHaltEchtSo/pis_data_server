@@ -35,6 +35,9 @@ class AppInitializer:
         import pis_app.routes
         import pis_app.auth
 
+        from .auth import auth_bp
+        self.flask_app.register_blueprint(auth_bp)
+
 
     def init_database(self) -> None:
         """
