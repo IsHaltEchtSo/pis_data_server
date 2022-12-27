@@ -8,19 +8,19 @@
 
   <h4>Links</h4>
   {% for zettel in context.zettel.links %}
-    <a href="{{ url_for('zettel_view', luhmann_id=zettel.luhmann_id)}}">{{zettel.luhmann_id}} {{zettel.title}}</a>
+    <a href="{{ url_for('zk_bp.zettel_view', luhmann_id=zettel.luhmann_id)}}">{{zettel.luhmann_id}} {{zettel.title}}</a>
   {% endfor %}
 
   <h4>Backlinks</h4>
   {% for zettel in context.zettel.backlinks %}
-    <a href="{{ url_for('zettel_view', luhmann_id=zettel.luhmann_id)}}">{{zettel.luhmann_id}} {{zettel.title}}</a>
+    <a href="{{ url_for('zk_bp.zettel_view', luhmann_id=zettel.luhmann_id)}}">{{zettel.luhmann_id}} {{zettel.title}}</a>
   {% endfor %}
 
   <br>
   <br>
   {% if current_user.role == context.RolesEnum.ADMIN %}
-    <a href="{{ url_for('zettel_edit_view', luhmann_id=context.zettel.luhmann_id) }}">Edit</a> - 
-    <a href="{{ url_for('delete_zettel', luhmann_id=context.zettel.luhmann_id) }}">Delete</a>
+    <a href="{{ url_for('zk_bp.zettel_edit', luhmann_id=context.zettel.luhmann_id) }}">Edit</a> - 
+    <a href="{{ url_for('zk_bp.zettel_delete', luhmann_id=context.zettel.luhmann_id) }}">Delete</a>
   {% endif %}
 {% endblock content %}
 

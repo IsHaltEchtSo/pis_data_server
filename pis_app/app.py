@@ -1,11 +1,9 @@
 from flask import Flask
 from flask_login import LoginManager
-from flask_caching import Cache
+
 
 
 login_manager = LoginManager()
-cache = Cache(config={  'CACHE_TYPE': 'SimpleCache', 
-                        'CACHE_DEFAULT_TIMEOUT': 300})
 
 
 class MyFlask(Flask):
@@ -34,8 +32,17 @@ class AppInitializer:
         Initialize the views using local imports after instantiating an app.
         This is called within the app context to avoid the app context error.
         """
-        import pis_app.routes
-        import pis_app.auth
+        from .main import main_bp
+        self.flask_app.register_blueprint(main_bp)
+
+        from .auth import auth_bp
+        self.flask_app.register_blueprint(auth_bp)
+
+        from .zettelkasten import zk_bp
+        self.flask_app.register_blueprint(zk_bp)
+
+        from .admin import admin_bp
+        self.flask_app.register_blueprint(admin_bp)
 
         from .gtd import gtd_bp
         self.flask_app.register_blueprint(gtd_bp)
@@ -46,7 +53,6 @@ class AppInitializer:
         Initialize the database and locally import the models in app context
         """
         from pis_app.database import Session
-        import pis_app.models
 
         self.flask_app._DBSession = Session
 
@@ -76,7 +82,6 @@ class AppInitializer:
         self.configure_app()
 
         login_manager.init_app(self.flask_app)
-        cache.init_app(self.flask_app)
 
         with self.flask_app.app_context():
             self.init_app_in_ctx()

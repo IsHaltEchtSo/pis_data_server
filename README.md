@@ -37,7 +37,7 @@ pip install -r requirements.txt
 mkdir instance && cp pis_app/config.py instance/private_config.py
 ```
 ### Database Migration
-- Uncomment and update the settings in instance/private_config.py to connect to your database
+- Uncomment and update the settings in pis_app/config.py to connect to your database
 
 - Change sqlalchemy.url value under pis_app/alembic.ini to connect to your database
 ``` 

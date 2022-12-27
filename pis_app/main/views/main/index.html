@@ -5,9 +5,9 @@
 
   <a href="{{ url_for('zk_bp.zettel_create') }}">  Digitalize</a> <br>
   <a href="{{ url_for('zk_bp.zettel_search') }}">  Search</a> <br>
-  <a href="{{ url_for('gtd_bp.main') }}">  Todoist Clone</a> <br>
-
 
   {% if current_user.role == context.RolesEnum.ADMIN.value %}
-  <a href="{{ url_for('admin.admin_dashboard') }}">  Admin Area</a> <br>
+    <a href="{{ url_for('admin_bp.admin_dashboard') }}">  Admin Area</a> <br>
   {% endif %}
+
+{% endblock content %}

@@ -20,6 +20,8 @@ fileConfig(config.config_file_name)
 # add your model's MetaData object here
 # for 'autogenerate' support
 from pis_app.models import Base
+import pis_app.auth.models
+import pis_app.zettelkasten.models
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
