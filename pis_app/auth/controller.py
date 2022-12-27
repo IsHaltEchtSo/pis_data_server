@@ -4,12 +4,10 @@ from flask import Blueprint, redirect, url_for, current_app as app, flash, rende
 from flask_login import current_user, logout_user, login_user, LoginManager
 
 
-# login_manager = LoginManager()
+
 auth_bp = Blueprint(    'auth_bp',
                         __name__,
                         template_folder='views')
-# login_manager.init_app(auth_bp)
-
 
 
 @auth_bp.route('/signup', methods=['POST', 'GET'])
