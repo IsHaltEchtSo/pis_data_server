@@ -11,7 +11,7 @@ auth_bp = Blueprint(    'auth_bp',
 
 
 @auth_bp.route('/signup', methods=['POST', 'GET'])
-def signup_view():
+def signup():
     """
     User sign-up page.
 
@@ -33,7 +33,7 @@ def signup_view():
             session.add(user)
             session.commit()
             login_user(user)
-            return redirect(url_for('index_view'))
+            return redirect(url_for('index'))
 
         flash('A User with that email adress already exists!')
 
@@ -45,7 +45,7 @@ def signup_view():
 
 
 @auth_bp.route('/login', methods=['POST', 'GET'])
-def login_view():
+def login():
     """
     Login page for registered users.
     
@@ -54,7 +54,7 @@ def login_view():
     """
     # Bypass if user is logged in
     if current_user.is_authenticated:
-        return redirect(url_for('index_view'))
+        return redirect(url_for('index'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -66,9 +66,9 @@ def login_view():
         if user and user.check_password(password=form.password.data):
             login_user(user)
             user.set_last_login()
-            return redirect(url_for('index_view'))
+            return redirect(url_for('index'))
         flash('Invalid usernamed/password combination')
-        return redirect(url_for('auth_bp.login_view'))
+        return redirect(url_for('auth_bp.login'))
     
     return render_template( 'auth/login.html',
                             form=form,
@@ -78,6 +78,6 @@ def login_view():
 
 
 @auth_bp.route('/logout')
-def logout_view():
+def logout():
     logout_user()
-    return redirect(url_for('index_view'))
+    return redirect(url_for('index'))

@@ -3,9 +3,8 @@ from flask_login import LoginManager
 from flask_caching import Cache
 
 
+
 login_manager = LoginManager()
-cache = Cache(config={  'CACHE_TYPE': 'SimpleCache', 
-                        'CACHE_DEFAULT_TIMEOUT': 300})
 
 
 class MyFlask(Flask):
@@ -76,7 +75,6 @@ class AppInitializer:
         self.configure_app()
 
         login_manager.init_app(self.flask_app)
-        cache.init_app(self.flask_app)
 
         with self.flask_app.app_context():
             self.init_app_in_ctx()
