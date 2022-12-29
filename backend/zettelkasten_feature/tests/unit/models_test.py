@@ -1,19 +1,4 @@
-"""
-Contains Unit Tests for pis_app/models.py file.
-"""
-
-from pis_app.models import User, Zettel, ZettelUpdate, UpdatedColumn, zettel_links_association
-
-class TestUser:
-    def test_new_user(self):
-        """
-        GIVEN an User Model
-        WHEN an User object is instantiated
-        THEN check 'name' is defined correctly 
-        """
-        user = User(name='max mustermann', email='max.mustermann@gmail.com')
-        assert user.name == 'max mustermann'
-        assert user.email == 'max.mustermann@gmail.com'
+from zettelkasten_feature.models import Zettel, ZettelUpdate, UpdatedColumn, zettel_links_association
 
 
 class TestZettel:
