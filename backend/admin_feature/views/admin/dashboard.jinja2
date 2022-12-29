@@ -1,0 +1,25 @@
+{% extends 'components/base.jinja2' %}
+
+{% import 'macros/roles.jinja2' as roles %}
+
+{% block content %}
+  <h2>List of Users</h2>
+  <table>
+    <thead>
+      <tr>
+        <td>Name</td>
+        <td>Email</td>
+        <td>Role</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in data.users %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ roles.int_to_str(user.role, data) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </ul>
+{% endblock content %}

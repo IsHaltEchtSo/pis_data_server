@@ -1,7 +1,0 @@
-{% macro int_to_str(role_int, context) %}
-  {% if role_int == context.RolesEnum.ADMIN.value %} 
-    Admin
-  {% elif role_int == context.RolesEnum.USER.value %}
-    User
-  {% endif %}
-{% endmacro %}

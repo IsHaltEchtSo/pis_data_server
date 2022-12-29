@@ -1,0 +1,7 @@
+{% macro int_to_str(role_int, data) %}
+  {% if role_int == data.RolesEnum.ADMIN.value %} 
+    Admin
+  {% elif role_int == data.RolesEnum.USER.value %}
+    User
+  {% endif %}
+{% endmacro %}
