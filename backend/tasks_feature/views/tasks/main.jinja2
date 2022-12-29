@@ -1,0 +1,12 @@
+{% extends 'components/base.jinja2' %}
+
+
+{% block content %}
+
+  <ul>
+    {% for daily_task in data.daily_tasks %}
+      <li>{{ daily_task.task_name }}</li>
+    {% endfor %}
+  </ul>
+
+{% endblock content %}

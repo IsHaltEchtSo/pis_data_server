@@ -1,0 +1,13 @@
+{% extends 'components/base.jinja2' %}
+
+
+{% block content %}
+
+  <a href="{{ url_for('zettelkasten_blueprint.zettel_create') }}">  Digitalize</a> <br>
+  <a href="{{ url_for('zettelkasten_blueprint.zettel_search') }}">  Search</a> <br>
+
+  {% if current_user.role == data.RolesEnum.ADMIN.value %}
+    <a href="{{ url_for('admin_blueprint.dashboard') }}">  Admin Area</a> <br>
+  {% endif %}
+
+{% endblock content %}

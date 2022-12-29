@@ -1,0 +1,1 @@
+from .controller import zettelkasten_blueprint

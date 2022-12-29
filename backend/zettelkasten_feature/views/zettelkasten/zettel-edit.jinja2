@@ -1,0 +1,44 @@
+{% extends 'components/base.jinja2' %}
+
+{% block content %}
+
+  <div>
+
+    <h1>Edit {{ data.zettel.luhmann_id}} {{data.zettel.title}}</h1>
+
+    <form method="POST" action="/zettel-edit/{{data.zettel.luhmann_id}}">
+      {{ data.form.csrf_token }}
+
+      <fieldset>
+        {{ data.form.luhmann_id.label }}
+        {{ data.form.luhmann_id(placeholder=data.zettel.luhmann_id) }}
+      </fieldset>
+
+      <fieldset>
+        {{ data.form.title.label }}
+        {{ data.form.title(placeholder=data.zettel.title) }}
+      </fieldset>
+
+      <fieldset>
+        {{ data.form.content.label }}
+        {{ data.form.content(placeholder=data.zettel.content) }}
+      </fieldset>
+
+      <fieldset>
+        {{ data.form.links.label }}
+        {{ data.form.links(placeholder=data.zettel.links) }}
+      </fieldset>
+
+      <fieldset>
+        {{ data.form.backlinks.label }}
+        {{ data.form.backlinks(placeholder=data.zettel.backlinks) }}
+      </fieldset>
+
+      <div>
+        {{ data.form.submit }}
+      </div>
+
+    </form>
+  </div>
+
+{% endblock %}

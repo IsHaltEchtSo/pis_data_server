@@ -1,0 +1,29 @@
+{% extends 'components/base.jinja2' %}
+
+{% block content %}
+  <h2>{{data.zettel.luhmann_id}} {{data.zettel.title}} </h2>
+
+  <h4>Content</h4> 
+  <p>{{data.zettel.content}}</p>
+
+  <h4>Links</h4>
+  {% for zettel in data.zettel.links %}
+    <a href="{{ url_for('zettelkasten_blueprint.zettel_view', 
+                        luhmann_id=zettel.luhmann_id)}}">
+      {{zettel.luhmann_id}} {{zettel.title}}
+    </a>
+  {% endfor %}
+
+  <h4>Backlinks</h4>
+  {% for zettel in data.zettel.backlinks %}
+    <a href="{{ url_for('zettelkasten_blueprint.zettel_view', luhmann_id=zettel.luhmann_id)}}">{{zettel.luhmann_id}} {{zettel.title}}</a>
+  {% endfor %}
+
+  <br>
+  <br>
+  {% if current_user.role == data.RolesEnum.ADMIN %}
+    <a href="{{ url_for('zettelkasten_blueprint.zettel_edit', luhmann_id=data.zettel.luhmann_id) }}">Edit</a> - 
+    <a href="{{ url_for('zettelkasten_blueprint.zettel_delete', luhmann_id=data.zettel.luhmann_id) }}">Delete</a>
+  {% endif %}
+{% endblock content %}
+

@@ -1,0 +1,44 @@
+{% extends 'components/base.jinja2' %}
+
+{% block content %}
+
+  <h3>Go ahead, create a nice little zettel</h3>
+
+  <form method="POST" action="/zettel-create">
+    {{ data.form.csrf_token }}
+
+    <fieldset>
+      {{ data.form.luhmann_id.label }}
+      {{ data.form.luhmann_id }}
+      {% for error in data.form.luhmann_id.errors %}
+        {{ error }}
+      {% endfor %}
+    </fieldset>
+
+    <fieldset>
+      {{ data.form.title.label }}
+      {{ data.form.title }}
+    </fieldset>
+
+    <fieldset>
+      {{ data.form.content.label }}
+      {{ data.form.content }}
+    </fieldset>
+
+    <fieldset>
+      {{ data.form.links.label }}
+      {{ data.form.links }}
+    </fieldset>
+    
+    <fieldset>
+      {{ data.form.backlinks.label }}
+      {{ data.form.backlinks }}
+    </fieldset>
+
+    <div>
+      {{ data.form.submit }}
+    </div>
+
+  </form>
+
+{% endblock content %}
