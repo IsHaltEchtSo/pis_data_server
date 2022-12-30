@@ -23,8 +23,4 @@
            href = " {{ url_for( 'zettelkasten_blueprint.zettel_view',   
                             	 luhmann_id = zettel.luhmann_id) }}    "  >
         	{{ zettel.luhmann_id }}: {{ zettel.title }}						</a>
-        <br>
-
-    {% endfor %}
-  
-{% endblock content %}
+        <br>                                                                        {% endfor %}    {% endblock content %}
