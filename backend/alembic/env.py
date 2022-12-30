@@ -22,6 +22,7 @@ fileConfig(config.config_file_name)
 from backend.database import Base
 import backend.auth_feature.models
 import backend.zettelkasten_feature.models
+import backend.routine_feature.models
 
 target_metadata = Base.metadata
 
