@@ -50,6 +50,9 @@ class AppInitializer:
         from .routine_feature import routine_blueprint
         self.flask_app.register_blueprint(routine_blueprint)
 
+        from .meditation_feature import meditation_blueprint
+        self.flask_app.register_blueprint(meditation_blueprint)
+
 
     def init_database(self) -> None:
         """

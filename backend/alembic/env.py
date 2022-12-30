@@ -23,6 +23,7 @@ from backend.database import Base
 import backend.auth_feature.models
 import backend.zettelkasten_feature.models
 import backend.routine_feature.models
+import backend.meditation_feature.models
 
 target_metadata = Base.metadata
 

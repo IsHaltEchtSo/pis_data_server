@@ -1,0 +1,16 @@
+{% extends 'components/base.jinja2' %}
+
+{% block content %}
+    <div>
+        <h1>Your Daily Meditation</h1>     </div>  
+
+    {% for meditation in data.meditations %}
+      	<a tag = "meditation" 
+           href = " {{ url_for( 'meditation_blueprint.view',   
+                            	 meditation_id = meditation.id) }} "  >
+            {{ meditation.name }}               						</a>
+        <br>                                                                {% endfor %}
+         
+    <br>
+    <a href={{ url_for( 'meditation_blueprint.create')}}>
+        Add Meditation                                    </a>    {% endblock content %}

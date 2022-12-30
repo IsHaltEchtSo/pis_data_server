@@ -2,9 +2,9 @@
 
 {% block content %}
 
-    <h3>Go ahead, create a nice little routine</h3>
+    <h3>Go ahead, create a nice little meditation</h3>
 
-    <form method="POST" action="/routine-create">
+    <form method="POST" action="/meditation/create">
         {{ data.form.csrf_token }}
 
         <fieldset>
@@ -14,9 +14,9 @@
                 {{ error }}                                 {% endfor %}    </fieldset>
 
         <fieldset>
-            {{ data.form.starttime.label }}
-            {{ data.form.starttime }}
-            {% for error in data.form.starttime.errors %}
+            {{ data.form.description.label }}
+            {{ data.form.description }}
+            {% for error in data.form.description.errors %}
                 {{ error }}                                 {% endfor %}    </fieldset>
 
         <div>

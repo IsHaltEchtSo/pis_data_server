@@ -1,0 +1,16 @@
+{% extends 'components/base.jinja2' %}
+
+{% block content %}
+    <h2> {{data.meditation.name}} </h2>
+
+    <h4>Description</h4> 
+    <p>{{data.meditation.description}}</p>
+
+    {% if current_user.role == data.RolesEnum.ADMIN %}
+        <a href="{{ url_for('meditation_blueprint.edit', 
+                            meditation_id=data.meditation.id) }}">
+            Edit                                                    </a> - 
+        <a href="{{ url_for('meditation_blueprint.delete', 
+                            meditation_id=data.meditation.id) }}">
+            Delete                                                  </a> {% endif %} {% endblock content %}
+
