@@ -30,8 +30,8 @@ def zettel_view(luhmann_id):
 
 
 # Route for 'Zettel Search' page
-@zettelkasten_blueprint.route('/zettel-search', 
-            methods=['POST', 'GET'])
+@zettelkasten_blueprint.route( '/zettel-search', 
+                               methods=['POST', 'GET'])
 def zettel_search():
     form = ZettelSearchForm()
 
@@ -53,8 +53,8 @@ def zettel_search():
 
 
 # Route for 'Label Zettel' page
-@zettelkasten_blueprint.route('/zettel-create', 
-            methods=['POST', 'GET'])
+@zettelkasten_blueprint.route( '/zettel-create', 
+                               methods=['POST', 'GET'])
 def zettel_create():
     form = ZettelCreateForm()
 
