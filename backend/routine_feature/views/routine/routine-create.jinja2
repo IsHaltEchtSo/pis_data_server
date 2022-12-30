@@ -1,0 +1,23 @@
+{% extends 'components/base.jinja2' %}
+
+{% block content %}
+
+    <h3>Go ahead, create a nice little routine</h3>
+
+    <form method="POST" action="/routine-create">
+        {{ data.form.csrf_token }}
+
+        <fieldset>
+            {{ data.form.name.label }}
+            {{ data.form.name }}
+            {% for error in data.form.name.errors %}
+                {{ error }}                                 {% endfor %}    </fieldset>
+
+        <fieldset>
+            {{ data.form.starttime.label }}
+            {{ data.form.starttime }}
+            {% for error in data.form.name.errors %}
+                {{ error }}                                 {% endfor %}    </fieldset>
+
+        <div>
+            {{ data.form.submit }}  </div>                                                  </form>     {% endblock content %}

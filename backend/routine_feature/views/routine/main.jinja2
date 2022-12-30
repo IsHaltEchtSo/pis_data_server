@@ -2,6 +2,15 @@
 
 {% block content %}
     <div>
-        <h1>Your Daily Routine</h1>     </div>  {% endblock content %}
+        <h1>Your Daily Routine</h1>     </div>  
+
+    {% for routine in data.routines %}
+        {{ routine.starttime}}
+        {{ routine.name }}
+        <br>                            {% endfor %} 
+        
+    <br>
+    <a href={{ url_for( 'routine_blueprint.routine_create')}}>
+        Add Routine                                             </a>    {% endblock content %}
 
         
