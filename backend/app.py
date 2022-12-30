@@ -47,6 +47,9 @@ class AppInitializer:
         from .tasks_feature import tasks_blueprint
         self.flask_app.register_blueprint(tasks_blueprint)
 
+        from .routine_feature import routine_blueprint
+        self.flask_app.register_blueprint(routine_blueprint)
+
 
     def init_database(self) -> None:
         """
