@@ -4,35 +4,32 @@ from .utility import ZettelFactory, DBSessionProcessor
 
 from backend.constants import RolesEnum, FlashEnum
 
-from flask import Blueprint, current_app as app, render_template, abort, flash, redirect, url_for
+from flask import current_app as app, render_template, abort, flash, redirect, url_for
 from flask_login import current_user, login_required
 
 
 
-zettelkasten_blueprint = Blueprint('zettelkasten_blueprint',
-                                   __name__,
-                                   template_folder='views')
+def main():
+    return render_template( 'zettelkasten/main.jinja2',
+                             data = { 'feature_title': 'Zettelkasten',
+                                      'feature_url': url_for( 'zettelkasten_blueprint.main' ) } )
 
 
-# Route for 'Zettel' page
-@zettelkasten_blueprint.route('/zettel-view/<string:luhmann_id>')
-def zettel_view(luhmann_id):
+def view(luhmann_id):
     db_session = app.get_db_session()
     zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id).one() 
     if not zettel:
         abort(404)
 
-    return render_template('zettelkasten/zettel-view.jinja2', 
-                            data={'title': zettel.title, 
-                                  'zettel':zettel, 
-                                  'RolesEnum': RolesEnum})
+    return render_template( 'zettelkasten/view.jinja2', 
+                            data = { 'feature_title': 'Zettelkasten',
+                                     'feature_url': url_for( 'zettelkasten_blueprint.main' ),
+                                     'zettel':zettel, 
+                                     'RolesEnum': RolesEnum } )
 
 
-# Route for 'Zettel Search' page
-@zettelkasten_blueprint.route( '/zettel-search', 
-                               methods=['POST', 'GET'])
-def zettel_search():
+def search():
     form = ZettelSearchForm()
 
     if form.validate_on_submit():
@@ -42,20 +39,19 @@ def zettel_search():
                                     Zettel.title.contains(form.title.data), 
                                     Zettel.luhmann_id.contains(form.luhmann_id.data))
 
-        return render_template('zettelkasten/zettel-search.jinja2', 
-                                data={'title': 'Zettel Search', 
-                                      'zettels':zettels, 
-                                      'form':form})
+        return render_template( 'zettelkasten/search.jinja2', 
+                                data = { 'feature_title': 'Zettelkasten',
+                                         'feature_url': url_for( 'zettelkasten_blueprint.main' ),
+                                         'zettels':zettels, 
+                                         'form':form } )
     
-    return render_template('zettelkasten/zettel-search.jinja2', 
-                            data={'title': 'Zettel Search',
-                                  'form': form})
+    return render_template('zettelkasten/search.jinja2', 
+                            data = { 'feature_title': 'Zettelkasten',
+                                     'feature_url': url_for( 'zettelkasten_blueprint.main' ),
+                                     'form': form})
 
 
-# Route for 'Label Zettel' page
-@zettelkasten_blueprint.route( '/zettel-create', 
-                               methods=['POST', 'GET'])
-def zettel_create():
+def create():
     form = ZettelCreateForm()
 
     if form.validate_on_submit():
@@ -66,22 +62,20 @@ def zettel_create():
 
         if not processor.confirm_constraint_satisfaction(object=zettel):
             flash(FlashEnum.ZETTELDUPLICATE.value)
-            return redirect(url_for('zettelkasten_blueprint.zettel_create'))
+            return redirect(url_for('zettelkasten_blueprint.create'))
 
         processor.add_to_db(zettel)
 
-        return redirect(url_for('zettelkasten_blueprint.zettel_view', 
+        return redirect(url_for('zettelkasten_blueprint.view', 
                                 luhmann_id=zettel.luhmann_id))
 
-    return render_template('zettelkasten/zettel-create.jinja2', 
-                            data={'title': 'Label Zettel', 
-                                  'form': form})
+    return render_template('zettelkasten/create.jinja2', 
+                            data = { 'feature_title': 'Zettelkasten',
+                                     'feature_url': url_for( 'zettelkasten_blueprint.main' ), 
+                                     'form': form})
 
 
-# Route for 'Zettel Edit' page
-@zettelkasten_blueprint.route(rule      = '/zettel-edit/<string:luhmann_id>', 
-                              methods   = ['POST', 'GET'])
-def zettel_edit(luhmann_id):
+def edit(luhmann_id):
     db_session = app.get_db_session()
     zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id) \
@@ -99,23 +93,23 @@ def zettel_edit(luhmann_id):
 
         if not processor.confirm_constraint_satisfaction(object=updated_zettel):
             flash(FlashEnum.ZETTELDUPLICATE.value)
-            return redirect(url_for('zettelkasten_blueprint.zettel_edit', 
-                                    luhmann_id=luhmann_id                ) )
+            return redirect( url_for('zettelkasten_blueprint.edit', 
+                                     luhmann_id=luhmann_id ) )
         
         processor.add_to_db(updated_zettel)
 
-        return redirect(url_for('zettelkasten_blueprint.zettel_view', 
+        return redirect(url_for('zettelkasten_blueprint.view', 
                                 luhmann_id=updated_zettel.luhmann_id ) )
 
-    return render_template('zettelkasten/zettel-edit.jinja2', 
-                            data={'title': 'Zettel Edit', 
-                                  'zettel':zettel, 
-                                  'form':form            })
+    return render_template('zettelkasten/edit.jinja2', 
+                            data = { 'feature_title': 'Zettelkasten',
+                                     'feature_url': url_for( 'zettelkasten_blueprint.main' ), 
+                                     'zettel':zettel, 
+                                     'form':form } )
 
 
-@zettelkasten_blueprint.route('/zettel-delete/<string:luhmann_id>')
 @login_required
-def zettel_delete(luhmann_id):
+def delete(luhmann_id):
     db_session = app.get_db_session()
     zettel = db_session.query(Zettel) \
                         .filter(Zettel.luhmann_id == luhmann_id).one()

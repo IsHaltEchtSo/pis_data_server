@@ -8,7 +8,7 @@
 
   <h4>Links</h4>
   {% for zettel in data.zettel.links %}
-    <a href="{{ url_for('zettelkasten_blueprint.zettel_view', 
+    <a href="{{ url_for('zettelkasten_blueprint.view', 
                         luhmann_id=zettel.luhmann_id)}}">
       {{zettel.luhmann_id}} {{zettel.title}}
     </a>
@@ -16,14 +16,14 @@
 
   <h4>Backlinks</h4>
   {% for zettel in data.zettel.backlinks %}
-    <a href="{{ url_for('zettelkasten_blueprint.zettel_view', luhmann_id=zettel.luhmann_id)}}">{{zettel.luhmann_id}} {{zettel.title}}</a>
+    <a href="{{ url_for('zettelkasten_blueprint.view', luhmann_id=zettel.luhmann_id)}}">{{zettel.luhmann_id}} {{zettel.title}}</a>
   {% endfor %}
 
   <br>
   <br>
   {% if current_user.role == data.RolesEnum.ADMIN %}
-    <a href="{{ url_for('zettelkasten_blueprint.zettel_edit', luhmann_id=data.zettel.luhmann_id) }}">Edit</a> - 
-    <a href="{{ url_for('zettelkasten_blueprint.zettel_delete', luhmann_id=data.zettel.luhmann_id) }}">Delete</a>
+    <a href="{{ url_for('zettelkasten_blueprint.edit', luhmann_id=data.zettel.luhmann_id) }}">Edit</a> - 
+    <a href="{{ url_for('zettelkasten_blueprint.delete', luhmann_id=data.zettel.luhmann_id) }}">Delete</a>
   {% endif %}
 {% endblock content %}
 

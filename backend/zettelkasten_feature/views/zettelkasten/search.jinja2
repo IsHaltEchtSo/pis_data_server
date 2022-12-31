@@ -4,7 +4,7 @@
     <div>
         <h1>Search Some Zettels</h1>
 
-        <form method="POST" action="/zettel-search">
+        <form method="POST" action="/search">
             {{ data.form.csrf_token }}
 
             <fieldset>
@@ -20,7 +20,7 @@
 
     {% for zettel in data.zettels|sort(attribute = 'luhmann_id') %}
       	<a tag = "zettel_link" 
-           href = " {{ url_for( 'zettelkasten_blueprint.zettel_view',   
+           href = " {{ url_for( 'zettelkasten_blueprint.view',   
                             	 luhmann_id = zettel.luhmann_id) }}    "  >
         	{{ zettel.luhmann_id }}: {{ zettel.title }}						</a>
         <br>                                                                        {% endfor %}    {% endblock content %}

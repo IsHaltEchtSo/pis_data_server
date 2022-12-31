@@ -1,0 +1,14 @@
+{% extends 'components/base.jinja2' %}
+
+{% block content %}
+    <div>
+        <h1>Your Zettelkasten Corner</h1>     </div>  
+         
+    <br>
+    <a href={{ url_for( 'zettelkasten_blueprint.create')}}>
+        Add Zettel                                    </a>
+    
+    <br>
+    <a href={{ url_for( 'zettelkasten_blueprint.search')}}>
+        Search Zettel                                    </a>
+{% endblock content %}
