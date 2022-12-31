@@ -1,9 +1,9 @@
 <nav>
 	<a href="{{ url_for('main_blueprint.index') }}">
 		PIS/ 											</a>
-  
-  	<span>
-		{{ data.title }}	</span>
+	
+	<a href="{{ data.feature_url }}">
+		{{ data.feature_title}} 						</a>
   
   	<div class="right-bar">
     	{% if current_user.is_authenticated %}
