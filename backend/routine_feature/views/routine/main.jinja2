@@ -4,7 +4,7 @@
     <div>
         <h1>Your Daily Routine</h1>     </div>  
 
-    {% for routine in data.routines %}
+    {% for routine in data.routines|sort(attribute = 'starttime') %}
         {{ routine.starttime}}
         {{ routine.name }}
         <br>                            {% endfor %} 
