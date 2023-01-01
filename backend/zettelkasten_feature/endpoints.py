@@ -1,5 +1,5 @@
 from backend.zettelkasten_feature import zettelkasten_blueprint
-from backend.zettelkasten_feature.controller import main, create, search, view, edit, delete
+from backend.zettelkasten_feature.controller import main, create, search, view, edit, delete, gallery
 
 
 
@@ -32,9 +32,16 @@ zettelkasten_blueprint.add_url_rule(rule = '/delete/<luhmann_id>',
                                     endpoint = 'delete',
                                     view_func = delete )
 
+
 zettelkasten_blueprint.add_url_rule(rule = '/search',
                                     methods = ['POST', 'GET'],
                                     endpoint = 'search',
                                     view_func = search )
+
+
+zettelkasten_blueprint.add_url_rule(rule = '/gallery',
+                                    methods = ['POST', 'GET'],
+                                    endpoint = 'gallery',
+                                    view_func = gallery )
 
 
