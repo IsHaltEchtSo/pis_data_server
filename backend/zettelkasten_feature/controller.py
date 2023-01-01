@@ -120,4 +120,14 @@ def delete(luhmann_id):
     DBSessionProcessor(db_session=db_session) \
         .delete_from_db(zettel)
     flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
-    return redirect(url_for('main_blueprint.index'))
+    return redirect(url_for('zettelkasten_blueprint.main'))
+
+
+def gallery():
+    db_session = app.get_db_session()
+    zettels = db_session.query(Zettel) \
+                            .all()
+    return render_template('zettelkasten/gallery.jinja2',
+                            data = { 'feature_url': url_for('zettelkasten_blueprint.main'),
+                                     'feature_title': 'Zettelkasten',
+                                     'zettels': zettels})
