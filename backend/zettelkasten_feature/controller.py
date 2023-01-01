@@ -120,7 +120,7 @@ def delete(luhmann_id):
     DBSessionProcessor(db_session=db_session) \
         .delete_from_db(zettel)
     flash(f"[{zettel.luhmann_id} {zettel.title}] was deleted")
-    return redirect(url_for('main_blueprint.index'))
+    return redirect(url_for('zettelkasten_blueprint.main'))
 
 
 def gallery():
