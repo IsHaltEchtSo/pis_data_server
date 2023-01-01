@@ -6,7 +6,7 @@
 
     <h1>Edit {{ data.zettel.luhmann_id}} {{data.zettel.title}}</h1>
 
-    <form method="POST" action="/edit/{{data.zettel.luhmann_id}}">
+    <form method="POST" action="/zettelkasten/edit/{{data.zettel.luhmann_id}}">
       {{ data.form.csrf_token }}
 
       <fieldset>
