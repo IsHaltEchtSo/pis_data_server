@@ -1,0 +1,17 @@
+<nav>
+	<a href="{{ url_for('index_blueprint.main') }}">
+		PIS/ 											</a>
+	
+	<a href="{{ data.feature_url }}">
+		{{ data.feature_title}} 						</a>
+  
+  	<div class="right-bar">
+    	{% if current_user.is_authenticated %}
+      		<a href="{{ url_for('authentication_blueprint.logout')}}">
+				Log Out										</a>
+
+    	{% else %}
+      		<a href="{{ url_for('authentication_blueprint.login')}}">
+				Log In										</a>
+				
+    	{% endif %}															</div>	</nav>

@@ -1,0 +1,82 @@
+{% extends 'components/base.jinja2' %}
+
+
+{% block content %}
+  <div>
+
+    {% for message in get_flashed_messages() %}
+      <div>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert">
+          x
+        </button>
+        {{ message }}
+      </div>
+    {% endfor %}
+
+    <h1>Sign Up</h1>
+
+    <form method="POST" action="/permissions/signup">
+      {{ form.csrf_token }}
+
+      <fieldset>
+        {{ form.name.label }}
+        {{ form.name(placeholder='John Smith') }}
+        {% if form.name.errors %}
+          <ul>
+            {% for error in form.email.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <fieldset>
+        {{ form.email.label }}
+        {{ form.email(placeholder='youremail@example.com') }}
+        {% if form.email.errors %}
+          <ul>
+            {% for error in form.email.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <fieldset>
+        {{ form.password.label }}
+        {{ form.password }}
+        {% if form.password.errors %}
+          <ul>
+            {% for error in form.password.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <fieldset>
+        {{ form.confirm_password.label }}
+        {{ form.confirm_password }}
+        {% if form.confirm_password.errors %}
+          <ul>
+            {% for error in form.confirm_password.errors %}
+              <li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </fieldset>
+
+      <div>
+        {{ form.submit }}
+      </div>
+
+    </form>
+
+    <div>
+      <div>
+        <span>Already have an account?</span>
+        <a href="{{ url_for('authentication_blueprint.login') }}">Log in.</a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
