@@ -21,8 +21,7 @@ def create_application() -> MyFlask:
 
 
 class BackendInitializer:
-    def __init__(self) -> None:
-        self.application: MyFlask = None
+    application: MyFlask = None
 
 
     def start(self, input_application: MyFlask) -> None:
@@ -31,15 +30,14 @@ class BackendInitializer:
         """
         self.application = input_application
 
-        self.set_application_configuration()
-
-        self.extend_flask_functionality()
+        self._set_application_configuration()
+        self._load_external_features()
 
         with self.application.app_context():
-            self.initialize_application_in_context()
+            self._initialize_application_in_context()
 
 
-    def set_application_configuration(self) -> None:
+    def _set_application_configuration(self) -> None:
         # Load Dev Config if no config object is provided
         try:
             from .instance.private_config import DevelopmentConfig
@@ -49,19 +47,26 @@ class BackendInitializer:
         self.application.config.from_object(DevelopmentConfig)
 
 
-    def extend_flask_functionality(self):
+    def _load_external_features(self):
         login_manager.init_app(self.application)
 
 
-    def initialize_application_in_context(self) -> None:
+    def _initialize_application_in_context(self) -> None:
         """
         Delegate to methods that need the app context to init the app.
         """
-        self.start_database()
-        self.start_features()
+        self._integrate_database()
+        self._integrate_features()
+
+        from backend.features.authentication.controller import login
+
+        self.application.add_url_rule(rule = '/',
+                                      endpoint = 'authentication_blueprint.login',
+                                      methods = ['GET'],
+                                      view_func = login )
 
 
-    def start_database(self) -> None:
+    def _integrate_database(self) -> None:
         """
         Initialize the database and locally import the models in app context
         """
@@ -70,7 +75,7 @@ class BackendInitializer:
         self.application.DatabaseSession = Session
 
 
-    def start_features(self) -> None:
+    def _integrate_features(self) -> None:
         from .features.authentication import authentication_blueprint
         from .features.errorhandling import errorhandling_blueprint
         from .features.index import index_blueprint
@@ -80,14 +85,16 @@ class BackendInitializer:
         from .features.task import task_blueprint
         from .features.zettelkasten import zettelkasten_blueprint
         
-        self.application.register_blueprint( authentication_blueprint)
-        self.application.register_blueprint( errorhandling_blueprint)
+        self.application.register_blueprint( authentication_blueprint )
+        self.application.register_blueprint( errorhandling_blueprint )
         self.application.register_blueprint( index_blueprint )
         self.application.register_blueprint( meditation_blueprint )
-        self.application.register_blueprint( permissions_blueprint)
+        self.application.register_blueprint( permissions_blueprint )
         self.application.register_blueprint( routine_blueprint )
         self.application.register_blueprint( task_blueprint )
         self.application.register_blueprint( zettelkasten_blueprint )
+
+        
 
 
 
