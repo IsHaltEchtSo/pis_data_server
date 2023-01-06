@@ -1,10 +1,8 @@
-from .app import create_app
+from .application import create_application
 from .config import TestingConfig
 from .database import Base, Session
-from .zettelkasten_feature.models import (
-    UpdatedColumn, User, Zettel, ZettelUpdate)
+from .features.zettelkasten.models import UpdatedColumn, User, Zettel, ZettelUpdate
 
-from venv import create
 import pytest
 
 
@@ -36,7 +34,7 @@ def zettel_update(zettel, updated_column):
 @pytest.fixture(scope='module')
 def test_client():
     # Create a Flask App configured for testing
-    flask_app = create_app(config_object=TestingConfig)
+    flask_app = create_application(config_object = TestingConfig)
 
     # Create a Test Client using the Flask Application
     with flask_app.test_client() as testing_client:

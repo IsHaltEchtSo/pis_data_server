@@ -7,10 +7,12 @@ from sqlalchemy.orm import sessionmaker
 
 
 
-meta    = MetaData( naming_convention = NAMING_CONVENTION)
+meta    = MetaData(naming_convention = NAMING_CONVENTION)
 
-engine  = create_engine( DevelopmentConfig.DATABASE_URI)
-Base    = declarative_base( bind=engine, 
-                            metadata=meta)
-Session = sessionmaker( bind=engine, 
-                        autoflush=False)
+engine  = create_engine(DevelopmentConfig.DATABASE_URI)
+
+Base    = declarative_base(bind=engine, 
+                           metadata=meta)
+
+Session = sessionmaker(bind=engine, 
+                       autoflush=False)
